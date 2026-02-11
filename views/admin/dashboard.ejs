@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="/bootstrap.css">
+    <link rel="stylesheet" href="/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/admin/main.css">
+</head>
+<body>
+<%- include('/admin/partials/navbar.ejs')%>
+<div class="container-fluid mt-5">
+    <div class="row">
+    <%- include('/admin/partials/sidebar.ejs')%>
+        <div class="col-10">
+            <h1 style="display: none">Welcome <%= user.username %></h1>
+        </div>
+    </div>
+</div>
+
+<script src="/jquery.js"></script>
+<script>
+$('h1').slideDown(1000);
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="/bootstrap.css">
+    <link rel="stylesheet" href="/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/admin/main.css">
+</head>
+<body>
+<%- include('/admin/partials/navbar.ejs')%>
+<div class="container-fluid mt-5">
+    <div class="row">
+        <%- include('/admin/partials/sidebar.ejs')%>
+        <div class="col-10">
+            <div class="d-flex align-items-center mb-3">
+                <h1>New Tasks</h1>
+                <a href="/admin/dashboard" class="btn btn-outline-primary ms-auto">Cancel</a>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-8 offset-2">
+                    <form action="/admin/task" method="post">
+                       <div class="mb-3">
+                           <label for="title">Title</label>
+                           <input type="text" name="title" class="form-control" id="title" placeholder="Enter title">
+                       </div>
+                        <div class="mb-3">
+                            <label for="description">Description</label>
+                            <textarea name="description" id="description" class="form-control"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="assignedTo">For</label>
+                            <select name="assignedTo" id="assignedTo" class="form-select">
+                                <option disabled hidden selected>Select user</option>
+                                <% users.forEach(user => { %>
+                                    <option value="<%= user._id %>"><%= user.username %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="public">Public</label>
+                            <input type="checkbox" name="public" id="public" class="form-check-input">
+                        </div>
+                        <div class="mb-3">
+                            <button class="btn btn-primary w-25">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="/jquery.js"></script>
+<script>
+    // $('h1').slideDown(1000);
+</script>
+</body>
+</html>

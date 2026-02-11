@@ -1,0 +1,35 @@
+html, body {
+    height: 100%;
+}
+
+
+body {
+    background: linear-gradient(darkcyan,pink);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+body.register {
+    background: linear-gradient(pink,darkcyan);
+}
+.login-form form {
+    width: 500px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.login-form form input {
+    all: unset;
+    border-bottom: 1px solid #222;
+}
+.login-form form button {
+    all: unset;
+    cursor: pointer;
+    background: darkcyan;
+    color: white;
+    padding: 10px 20px;
+    align-self: center;
+}
