@@ -1,5 +1,6 @@
 function isAuth(req, res, next) {
    if(!req.session.user){
+       // admin ili superadmin
      return   res.redirect('/');
    }
    next();
@@ -7,3 +8,4 @@ function isAuth(req, res, next) {
 
 
 module.exports = isAuth;
+
