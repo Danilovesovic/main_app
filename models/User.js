@@ -23,7 +23,13 @@ const UserSchema = new Schema({
         type: String,
         enum: ["admin", "superadmin"],
         default: "admin"
-    }
+    },
+    flag: {
+        type: String,
+        enum: ["green", "orange", "red"],
+        default: "green"
+    },
+
 })
 
 

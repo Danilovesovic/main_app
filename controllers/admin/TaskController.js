@@ -9,7 +9,6 @@ const index =async (req, res) => {
             {public: true}
         ]
     })
-        Task.where({public: true}).where({assignedTo: req.session.user._id})
         .populate('assignedTo')
         .populate('assignedBy');
    res.render('admin/task/index', {tasks: allTasks,title: 'Task', user: req.session.user});

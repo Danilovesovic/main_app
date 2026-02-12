@@ -38,8 +38,12 @@
                         <% tasks.forEach(function(task){ %>
                             <tr>
                                 <td><%= task.title%></td>
-                                <td><%= task.assignedTo.username %></td>
-                                <td><%= task.assignedBy.username %></td>
+                                <td>
+                                    <%= task.assignedTo?.username || '' %>
+                                </td>
+                                <td>
+                                    <%= task.assignedBy?.username || '' %>
+                                </td>
                                 <td>
                                     <% if(task.public) {%>
                                     <i class="bi-eye fs-4 text-success"></i>
@@ -107,7 +111,7 @@
 
    function deleteTask(e){
        let id = e.target.getAttribute('data-id');
-       fetch(`/admin/task/${id}`, {method: 'DELETE'})
+       fetch(`/admin/task/${id}`, { method: 'delete' })
            .then(res => res.json())
            .then(data => {
                if(data.msg === 'Task deleted successfully'){

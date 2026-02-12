@@ -23,7 +23,7 @@ app.use(express.urlencoded({extended: true}));
 app.use('/', router);
 
 
-app.listen(3000, function(){
-    console.log('Server is running on port 3000');
+app.listen(3333, function () {
+    console.log('Server is running on port 3333');
 });
 
