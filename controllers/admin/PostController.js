@@ -53,14 +53,16 @@ const index = async (req, res) => {
         favoriteIds,
         tab,
         title: 'Social',
-        user: req.session.user
+        user: req.session.user,
+        pageScript: '/js/admin/social-index.js'
     });
 };
 
 const create = async (req, res) => {
     res.render('admin/social/create', {
         title: 'New Post',
-        user: req.session.user
+        user: req.session.user,
+        pageScript: '/js/admin/social-create.js'
     });
 };
 
