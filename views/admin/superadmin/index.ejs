@@ -29,7 +29,7 @@
                         <thead>
                         <tr>
                             <th>User</th>
-                            <th>Co-superadmin</th>
+                            <th>Role</th>
                             <th>Flag</th>
                             <th>Delete</th>
                         </tr>
@@ -70,7 +70,7 @@
             <% } %>
                 </td>
                                 <td>
-                                    <i data-id="<%= user._id %>"class="superadmin-delete-btns bi-trash"></i>  
+                                    <i data-id="<%= user._id %>" class="<%= user.main == false ? 'superadmin-delete-btns bi-trash' : '' %> "></i>
                                 </td>
                                
                             </tr>

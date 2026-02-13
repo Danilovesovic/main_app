@@ -8,10 +8,13 @@ const index =async (req, res) => {
             {assignedBy: req.session.user._id},
             {public: true}
         ]
-    })
+    }).populate('assignedTo')
+        .populate('assignedBy');
+
+    Task.where({ public: true }).where({ assignedTo: req.session.user._id })
         .populate('assignedTo')
         .populate('assignedBy');
-   res.render('admin/task/index', {tasks: allTasks,title: 'Task', user: req.session.user});
+    res.render('admin/task/index', { tasks: allTasks, title: 'Task', user: req.session.user, pageScript: '/js/admin/task-index.js' });
 }
 const create =async (req, res) => {
     const users = await User.find({})

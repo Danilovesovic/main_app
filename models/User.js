@@ -24,6 +24,10 @@ const UserSchema = new Schema({
         enum: ["admin", "superadmin"],
         default: "admin"
     },
+    main: {
+        type: Boolean,
+        default: false
+    },
     flag: {
         type: String,
         enum: ["green", "orange", "red"],

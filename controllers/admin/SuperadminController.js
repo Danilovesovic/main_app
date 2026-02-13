@@ -10,7 +10,8 @@ const index =async (req, res) => {
 }
 const create = async (req, res) => {
     let allUsers =await User.find({});
-  
+
+
    res.render('admin/superadmin/create', {
        users: allUsers,
        title: 'Create User',
@@ -18,11 +19,16 @@ const create = async (req, res) => {
 }
 const store =async (req,res) => {
     let {username, email, password, role,flag} = req.body;
+    //AKo je baza prazna, prvi User ce biti main Superadmin koga nece moci niko da obrise
+    let allUsers = await User.find({});
+    let emptyBase = (allUsers.length === 0) ? true : false;
+
     const user =await User.create({
         username,
         email,
         password,
         role,
+        main: emptyBase,
         flag 
 
     });
