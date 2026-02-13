@@ -20,6 +20,8 @@ router.get('/superadmin/create', SuperadminController.create)
 router.post('/superadmin', SuperadminController.store)
 router.delete('/superadmin/:id', SuperadminController.destroy)
 
+router.patch('/superadmin/:userId/flag', SuperadminController.updateFlag)
+
 
 
 

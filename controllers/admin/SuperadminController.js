@@ -49,11 +49,29 @@ const destroy =async (req,res) => {
         res.status(500).json({msg: 'Something went wrong'});
     }
 }
+const updateFlag = async (req, res) => {
+    try {
+        const { userId } = req.params;       // _id korisnika
+        const { flag } = req.body;       // nova boja
+
+        const user = await User.findByIdAndUpdate(userId, { flag }, { new: true });
+        if (!user) {
+            return res.status(404).json({ msg: 'User not found' });
+        }
+        res.status(200).json({ msg: 'Flag updated successfully', user });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: 'Something went wrong' });
+    }
+};
+
+
 
 
 module.exports = {
     index,
     create,
     store,
-    destroy
+    destroy,
+    updateFlag
 }

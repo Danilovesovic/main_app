@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="/bootstrap.css">
     <link rel="stylesheet" href="/bootstrap-icons.css">
     <link rel="stylesheet" href="/css/admin/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
 <body>
 <%- include('../partials/navbar.ejs', { user: user })%>
@@ -39,9 +41,34 @@
                                 <td>
                                     <%= user.role || '' %>
                                 </td>
-                                <td>
-                                    <%= user.flag || '' %>
-                                </td>
+<td>
+<% if (user.flag) { %>
+    <div class="dropdown">
+        <!-- klikabilna zastavica -->
+        <a href="#" id="flagDropdown<%= user._id %>" data-bs-toggle="dropdown" aria-expanded="false">
+            <% if (user.flag==='green' ) { %>
+                <i class="fa-regular fa-flag text-success fs-4"></i>
+                <% } else if (user.flag==='orange' ) { %>
+                    <i class="fa-regular fa-flag text-warning fs-4"></i>
+                    <% } else if (user.flag==='red' ) { %>
+                        <i class="fa-solid fa-flag text-danger fs-4"></i>
+                        <% } %>
+        </a>
+
+        <!-- dropdown sa opcijama -->
+        <ul class="dropdown-menu" aria-labelledby="flagDropdown<%= user._id %>">
+            <li><a class="dropdown-item change-flag" href="#" data-user-id="<%= user._id %>" data-flag="green">🟢
+                    Green</a></li>
+            <li><a class="dropdown-item change-flag" href="#" data-user-id="<%= user._id %>" data-flag="orange">🟠
+                    Orange</a></li>
+            <li><a class="dropdown-item change-flag" href="#" data-user-id="<%= user._id %>" data-flag="red">🔴 Red</a>
+            </li>
+        </ul>
+    </div>
+    <% } else { %>
+        <%= '' %>
+            <% } %>
+                </td>
                                 <td>
                                     <i data-id="<%= user._id %>"class="superadmin-delete-btns bi-trash"></i>  
                                 </td>
@@ -61,14 +88,57 @@
 <script>
    
    let deleteBtns = document.querySelectorAll('.superadmin-delete-btns');
+    let flagBtns = document.querySelectorAll('.change-flag');
+
    deleteBtns.forEach(btn => {
       btn.addEventListener('click', deleteUser)
    })
 
+                flagBtns.forEach(flag => {
+                    flag.addEventListener('click', changeFlag)
+                })
+
+                async function changeFlag(e) {
+                    e.preventDefault();
+
+                    const userId = e.target.dataset.userId;
+                    const newFlag = e.target.dataset.flag;
+
+                    // console.log('Nova boja:', newFlag, 'User ID:', userId);
+
+                    try {
+                        const res = await fetch(`/admin/superadmin/${userId}/flag`, {
+                            method: 'PATCH',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ flag: newFlag })
+                        })
+                            .then(res => {
+
+                                if (!res.ok) throw new Error(`Server returned ${res.status}`);
+                                return res.json();
+                            }).then(data => {
+                                if (data.msg === 'Flag updated successfully') {
+                                    // Update zastavice odmah u tabeli
+                                    const icon = document.querySelector(`#flagDropdown${userId} i`);
+                                    icon.className = 'fa-flag fs-4';
+                                    if (newFlag === 'green') icon.classList.add('fa-regular', 'text-success');
+                                    if (newFlag === 'orange') icon.classList.add('fa-regular', 'text-warning');
+                                    if (newFlag === 'red') icon.classList.add('fa-solid', 'text-danger');
+                                } else {
+                                    alert('Something went wrong');
+                                }
+                            }
+                            )
+
+                    } catch (err) {
+                        console.error(err);
+                    }
+                }
+
    function deleteUser(e){
        let id = e.target.getAttribute('data-id');
    
-    // let id = e.target.dataset.id;
+       // ili let id = e.target.dataset.id;
 
        if(!id) return alert('ID not found!');
        

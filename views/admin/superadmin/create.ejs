@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/bootstrap.css">
     <link rel="stylesheet" href="/bootstrap-icons.css">
     <link rel="stylesheet" href="/css/admin/main.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 <%- include('/admin/partials/navbar.ejs')%>
@@ -44,14 +45,33 @@
                                  <option value="superadmin">Superadmin</option>
                             </select>
                         </div>
-                        <div class="mb-3">
+                        <!-- <div class="mb-3">
                             <label for="flag">Flag</label>
                             <select name="flag" id="flag" class="form-select">
                                 <option value="green" selected>Green</option>
                                  <option value="orange">Orange</option>
                                  <option value="red">Red</option>
                             </select>
-                        </div>
+                        </div> -->
+                        <div class="btn-group mb-3" role="group">
+                        
+                            <input type="radio" class="btn-check" name="flag" id="green" value="green" checked>
+                            <label class="btn btn-outline-success" for="green">
+                                <i class="fa-solid fa-flag"></i>
+                            </label>
+                        
+                            <input type="radio" class="btn-check" name="flag" id="orange" value="orange">
+                            <label class="btn btn-outline-warning" for="orange">
+                                <i class="fa-regular fa-flag"></i>
+                            </label>
+                        
+                            <input type="radio" class="btn-check" name="flag" id="red" value="red">
+                            <label class="btn btn-outline-danger" for="red">
+                                <i class="fa-solid fa-flag"></i>
+                            </label>
+
+</div>
+
                         
                         <div class="mb-3">
                             <button class="btn btn-primary w-50">Save</button>
