@@ -12,4 +12,6 @@ router.post('/task', TaskController.store)
 
 router.delete('/task/:id', TaskController.destroy)
 
+router.get('/messages', require('../controllers/admin/MessagesController.js'))
+
 module.exports = router;

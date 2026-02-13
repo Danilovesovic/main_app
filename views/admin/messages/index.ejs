@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+		/>
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>DSlack | Messages</title>
+		<link rel="stylesheet" href="/bootstrap.css" />
+		<link rel="stylesheet" href="/bootstrap-icons.css" />
+		<link rel="stylesheet" href="/css/admin/main.css" />
+	</head>
+	<body>
+		<%- include('/admin/partials/navbar.ejs')%>
+		<div class="container-fluid mt-5">
+			<div class="row">
+				<%- include('/admin/partials/sidebar.ejs')%>
+				<div class="col-10" style="background-color: burlywood">
+					<div class="d-flex align-items-center mb-3">
+						<h1>Messages</h1>
+					</div>
+					<hr />
+
+					<div class="row" style="height: 75vh">
+						<div class="col-md-4 border-end d-flex flex-column">
+							<div class="mb-3">
+								<select id="conversationSelector" class="form-select">
+									<option disabled hidden selected>Select Conversation</option>
+									<!-- @todo: Populate with conversations/users -->
+									<!-- <% users.forEach(user => { %>
+                                        <option value="<%= user._id %>"><%= user.username %></option>
+                                    <% }) %> -->
+								</select>
+							</div>
+
+							<div
+								class="list-group flex-grow-1 overflow-auto"
+								id="conversationList"
+							></div>
+						</div>
+
+						<div class="col-md-8 d-flex flex-column">
+							<div class="border-bottom pb-2 mb-3">
+								<h5 id="activeUserName" class="mb-0 text-muted">
+									Select a conversation
+								</h5>
+							</div>
+
+							<div
+								id="chatMessages"
+								class="flex-grow-1 overflow-auto mb-3 p-2"
+								style="background-color: #f8f9fa; border-radius: 8px"
+							></div>
+
+							<div class="input-group">
+								<input
+									type="text"
+									id="messageInput"
+									class="form-control"
+									placeholder="Type a message..."
+								/>
+								<button class="btn btn-primary" id="sendBtn">
+									<i class="bi bi-send"></i>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- @todo: Move the following script into /public/js/ folder  -->
+		<script>
+			// @todo: Attach listener on WS event, probably "new-message" event emited from BE
+			// @todo: Fetch conversations and push into "conversations" array, then populate convo selector
+			const conversations = [];
+
+			let activeConversation = null;
+
+			const conversationList = document.querySelector('#conversationList');
+			const chatMessages = document.querySelector('#chatMessages');
+			const activeUserName = document.querySelector('#activeUserName');
+			const messageInput = document.querySelector('#messageInput');
+			const sendBtn = document.querySelector('#sendBtn');
+			const conversationSelector = document.querySelector('#conversationSelector');
+
+			function renderConversations(filter = '') {
+				conversationList.innerHTML = '';
+
+				conversations
+					.filter((conversation) => conversation.user.toLowerCase().includes(filter.toLowerCase()))
+					.forEach((conversation) => {
+						console.log(conversation);
+
+						const button = document.createElement('button');
+						button.className = 'list-group-item list-group-item-action';
+						button.innerHTML = `<div class="fw-bold">${conversation.user}</div>`;
+
+						button.addEventListener('click', () => {
+							activeConversation = conversation;
+							renderMessages();
+							highlightActive(conversation.id);
+						});
+
+						button.dataset.id = conversation.id;
+
+						conversationList.appendChild(button);
+					});
+			}
+
+			function highlightActive(id) {
+				document.querySelectorAll('#conversationList button').forEach((btn) => {
+					btn.classList.remove('active');
+
+					if (Number(btn.dataset.id) === id) {
+						btn.classList.add('active');
+					}
+				});
+			}
+
+			function renderMessages() {
+				if (!activeConversation) return;
+
+				activeUserName.textContent = activeConversation.user;
+				chatMessages.innerHTML = '';
+
+				activeConversation.messages.forEach((msg) => {
+					const wrapper = document.createElement('div');
+					wrapper.className = `d-flex mb-2 ${
+						msg.sender === 'me' ? 'justify-content-end' : 'justify-content-start'
+					}`;
+
+					wrapper.innerHTML = `
+                        <div class="p-2 rounded ${msg.sender === 'me' ? 'bg-primary text-white' : 'bg-white border'}" style="max-width: 70%;">
+                            <div>${msg.text}</div>
+                            <small class="text-muted d-block text-end">
+                                ${msg.time}
+                            </small>
+                        </div>
+                    `;
+
+					chatMessages.appendChild(wrapper);
+				});
+
+				chatMessages.scrollTop = chatMessages.scrollHeight;
+			}
+
+			sendBtn.addEventListener('click', sendMessage);
+			messageInput.addEventListener('keypress', (e) => {
+				if (e.key === 'Enter') {
+					sendMessage();
+				}
+			});
+
+			function sendMessage() {
+				if (!activeConversation) return;
+
+				const text = messageInput.value.trim();
+
+				if (!text) return;
+
+				activeConversation.messages.push({
+					sender: 'me',
+					text,
+					time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), // @todo: Try to use Temporal. Check browser support
+				});
+
+				messageInput.value = '';
+				renderMessages();
+
+				// @todo: Send message to the BE with WS
+			}
+
+			conversationSelector.addEventListener('input', (e) => {
+				// console.log(e.target.value);
+				renderConversations(e.target.value);
+			});
+
+			renderConversations();
+		</script>
+	</body>
+</html>
