@@ -38,7 +38,8 @@
                         <% users.forEach(function(user){ %>
                             <tr>
                                 <td><%= user.username%></td>
-                                <td>
+                                <td class="role-expand <%= user.main == false ? 'clickable' : '' %>" data-user-id="<%= user._id %>"
+                                    data-role="<%= user.role %>">
                                     <%= user.role || '' %>
                                 </td>
 <td>
@@ -86,17 +87,13 @@
 <script src="/jquery.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 <script>
-   
+                    let roleBtns = document.querySelectorAll('.role-expand');
    let deleteBtns = document.querySelectorAll('.superadmin-delete-btns');
     let flagBtns = document.querySelectorAll('.change-flag');
 
-   deleteBtns.forEach(btn => {
-      btn.addEventListener('click', deleteUser)
-   })
-
-                flagBtns.forEach(flag => {
-                    flag.addEventListener('click', changeFlag)
-                })
+                    roleBtns.forEach(role => role.addEventListener('click', changeRole));
+                    deleteBtns.forEach(btn => btn.addEventListener('click', deleteUser));
+                    flagBtns.forEach(flag => flag.addEventListener('click', changeFlag));
 
                 async function changeFlag(e) {
                     e.preventDefault();
@@ -156,6 +153,48 @@
            })
             .catch(err => console.error(err));
    }
+            function changeRole(e) {
+                const cell = e.target;
+
+                if (!cell.classList.contains('clickable')) return;
+
+                const userId = cell.dataset.userId;
+                const currentRole = cell.dataset.role;
+
+                // select za main superadmin-a
+                const select = document.createElement('select');
+                select.className = 'form-select';
+
+                select.innerHTML = `
+                                    <option value="admin">Admin</option>
+                                    <option value="superadmin">Superadmin</option>
+                                `;
+
+                select.value = currentRole;
+
+                cell.innerHTML = '';
+                cell.appendChild(select);
+
+                // kada promeniš vrednost
+                select.addEventListener('change', async function () {
+                    const newRole = this.value;
+
+                    const res = await fetch(`/admin/superadmin/${userId}/role`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ role: newRole })
+                    })
+                        .then(res => {
+                            if (!res.ok) throw new Error(`Greška pri promeni role`);
+                            return res.json();
+                        })
+                        .then(data => {
+
+                            data.role = newRole;
+                            cell.innerHTML = newRole;
+                        });
+                });
+            }
  
 </script>
 </body>

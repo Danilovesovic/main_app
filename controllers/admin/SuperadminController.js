@@ -70,6 +70,29 @@ const updateFlag = async (req, res) => {
         res.status(500).json({ msg: 'Something went wrong' });
     }
 };
+const updateRole = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const { role } = req.body;
+
+        const user = await User.findByIdAndUpdate(
+            userId,
+            { role },
+            { new: true }
+        );
+
+        if (!user) {
+            return res.status(404).json({ msg: 'User not found' });
+        }
+
+        res.status(200).json({ user });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: 'Server error' });
+    }
+};
+
 
 
 
@@ -79,5 +102,6 @@ module.exports = {
     create,
     store,
     destroy,
-    updateFlag
+    updateFlag,
+    updateRole
 }
