@@ -27,7 +27,7 @@
 						<div class="col-md-4 border-end d-flex flex-column">
 							<div class="mb-3">
 								<select id="conversationSelector" class="form-select">
-									<option disabled hidden selected>Select User</option>
+									<option disabled hidden selected>Select a Conversation</option>
 									<% users.forEach(u => { %>
                                         <option <%= u._id.toString() === user._id.toString() ? "disabled" : "" %> value="<%= u._id %>">
 											<%= u.username %>
@@ -45,7 +45,7 @@
 						<div class="col-md-8 d-flex flex-column" style="max-height: 100%">
 							<div class="border-bottom pb-2 mb-3">
 								<h5 id="activeUserName" class="mb-0 text-muted">
-									Select a conversation
+									Select a Conversation
 								</h5>
 							</div>
 

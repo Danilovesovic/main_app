@@ -9,14 +9,14 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-app.use(
-	session({
-		secret: 'keyboard cat',
-		resave: false,
-		saveUninitialized: true,
-		cookie: { secure: false },
-	})
-);
+const sessionMiddleware = session({
+	secret: 'keyboard cat',
+	resave: false,
+	saveUninitialized: true,
+	cookie: { secure: false },
+});
+
+app.use(sessionMiddleware);
 
 app.set('view engine', 'ejs');
 app.set('view options', { root: __dirname + '/views' });
@@ -34,31 +34,47 @@ server.listen(3000, function () {
 	console.log('Server is running on port 3000');
 });
 
-const onlineUsers = new Map();
+const ONLINE_USERS = new Map();
+
+io.use((socket, next) => {
+	sessionMiddleware(socket.request, {}, next);
+});
+
+io.use((socket, next) => {
+	const user = socket.request.session?.user;
+
+	if (!user?._id) {
+		return next(new Error('Unauthorized'));
+	}
+
+	socket.user = user;
+	next();
+});
 
 io.on('connection', (socket) => {
 	// console.log('connection');
 
 	socket.on('disconnect', () => {
-		// console.log('disconnect ', socket.id);
-		// @todo: Remove user from onlineUsers on disconnect
+		// console.log('disconnect');
+	
+		ONLINE_USERS.delete(socket.user?._id);
 	});
 
 	socket.on('register', (user) => {
-		// console.log('register ', user);
+		// console.log('register');
 
-		// socket.user = user;
-		onlineUsers.set(user.id, socket.id);
+		ONLINE_USERS.set(user.id, socket.id);
 	});
 
 	socket.on('private_message', (private_message) => {
 		// console.log('private_message ', private_message);
 
-		const { from, to, message } = private_message;
-
-		const sendTo = [onlineUsers.get(from.userId), onlineUsers.get(to.userId)].filter(Boolean);
-		const conversationId = [from.userId, to.userId].sort().join('_');
-		const participants = [from.userId, to.userId];
+		const { to, message } = private_message;
+		const fromUser = socket.user;
+		
+		const sendTo = [ONLINE_USERS.get(fromUser._id), ONLINE_USERS.get(to.userId)].filter(Boolean);
+		const conversationId = [fromUser._id, to.userId].sort().join('_');
+		const participants = [fromUser._id, to.userId];
 
 		// @note: Continue from here.
 		// @todo: Store transferred messages through this socket in the DB
@@ -74,7 +90,7 @@ io.on('connection', (socket) => {
 
 		io.to(sendTo).emit('receive_message', {
 			conversationId,
-			from,
+			from: {userId: fromUser._id, username: fromUser.username},
 			to,
 			message,
 			participants,

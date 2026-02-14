@@ -15,7 +15,7 @@
 		throw new Error('Unauthorized');
 	}
 
-	const socket = io();
+	const socket = io(window.location.host); // Defaults to window.location.host
 	let activeConversation = null;
 
 	// Listeners
@@ -24,7 +24,7 @@
 		socket.emit('register', user);
 	});
 
-	// New messages arrive here.
+	// New messages arrive here
 	socket.on('receive_message', ({ conversationId, from, to, message, participants }) => {
 		const convo = conversations.find((c) => c.conversationId === conversationId);
 
@@ -87,6 +87,7 @@
 
 		activeUserName.textContent = username;
 
+		renderConversations();
 		renderMessages();
 	});
 
@@ -116,7 +117,7 @@
 				activeConversation = convo;
 				activeUserName.textContent = reciverUsername;
 
-                renderConversations();
+				renderConversations();
 				renderMessages();
 			};
 
@@ -150,16 +151,14 @@
 
 		if (!text) return;
 
-		const participants = [activeConversation.from, activeConversation.to];
-		const to = participants.find((p) => p.userId !== user.id);
+		// Get/Switch the "to" participant in this 1:1 conversation - that would be The user who is NOT currently logged in
+		const to =
+			activeConversation.from.userId === user.id
+				? activeConversation.to
+				: activeConversation.from;
 
-		// Send message happens here
 		socket.emit('private_message', {
 			conversationId: activeConversation.conversationId,
-			from: {
-				userId: user.id,
-				username: user.username,
-			},
 			to,
 			message: text,
 		});
@@ -167,9 +166,9 @@
 		messageInput.value = '';
 	}
 
-	renderConversations();
-
 	function getSessionUser() {
 		return fetch('/user').then((res) => res.json());
 	}
+
+	renderConversations();
 })();
