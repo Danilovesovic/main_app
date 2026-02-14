@@ -1,0 +1,163 @@
+<%- include('/admin/partials/head.ejs')%>
+<%- include('/admin/partials/top.ejs')%>
+            <div class="d-flex align-items-center mb-3">
+                <h1>Social</h1>
+            </div>
+            <ul class="nav nav-tabs mb-3">
+                <li class="nav-item">
+                    <a class="nav-link <%= tab === 'all' ? 'active' : '' %>" href="/admin/social?tab=all">All Posts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <%= tab === 'my-posts' ? 'active' : '' %>" href="/admin/social?tab=my-posts">My Posts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <%= tab === 'favorites' ? 'active' : '' %>" href="/admin/social?tab=favorites">Favorites</a>
+                </li>
+            </ul>
+            <% if (tab === 'all' || tab === 'my-posts') { %>
+            <div class="row mb-4 create-post-card">
+                <div class="col-10 offset-1">
+                    <div class="card">
+                        <div class="card-body">
+                            <form action="/admin/social" method="post" id="create-post-form" enctype="multipart/form-data">
+                                <div class="mb-3">
+                                    <label for="description">What's on your mind?</label>
+                                    <textarea name="description" id="description" class="form-control" rows="3" placeholder="Write something..." required></textarea>
+                                </div>
+                                <div class="mb-3 d-flex flex-wrap align-items-center gap-2">
+                                    <input type="file" name="images" id="images" class="d-none" accept="image/jpeg,image/png,image/gif,image/webp" multiple>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-choose-images" title="Add images">
+                                        <i class="bi bi-images"></i> Images
+                                    </button>
+                                    <span class="small text-muted" id="images-chosen"></span>
+                                </div>
+                                <div id="images-preview" class="images-preview d-flex flex-wrap gap-2 mb-3"></div>
+                                <button type="submit" class="btn btn-primary">Post</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+            <hr>
+            <div class="row social-feed">
+                <div class="col-10 offset-1">
+                    <% if (posts.length === 0) { %>
+                    <p class="text-muted">No posts yet.</p>
+                    <% } %>
+                    <% posts.forEach(function(post){ %>
+                    <% const currentUserReaction = (post.reactions || []).find(function(r){ return String(r.userId && r.userId._id ? r.userId._id : r.userId) === String(user._id); }); %>
+                    <% const canDeletePost = post.author && String(post.author._id) === String(user._id); %>
+                    <div class="card mb-3 post-card" data-id="<%= post._id %>">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h5 class="card-title"><%= post.description && post.description.length > 0 ? post.description : post.text %></h5>
+                                <div class="d-flex align-items-center gap-1">
+                                    <% if (canDeletePost) { %>
+                                    <button type="button" class="btn btn-link btn-sm p-0 text-danger delete-post-btn" data-id="<%= post._id %>" title="Delete post"><i class="bi bi-trash"></i></button>
+                                    <% } %>
+                                    <button type="button" class="btn btn-link btn-sm p-0 favorite-btn" data-id="<%= post._id %>" title="Favorite">
+                                    <i class="bi bi-star<%= favoriteIds.indexOf(post._id.toString()) >= 0 ? '-fill text-warning' : '' %>"></i>
+                                </button>
+                                </div>
+                            </div>
+                            <% if (post.images && post.images.length > 0) { %>
+                            <div class="post-images mb-2">
+                                <% post.images.forEach(function(img){ %>
+                                <img src="<%= img %>" alt="Post image" class="img-fluid rounded me-1 mb-1" style="max-height: 300px;">
+                                <% }); %>
+                            </div>
+                            <% } %>
+                            <p class="card-text post-author">
+                                <i class="bi bi-person"></i> <%= post.author.username %>
+                            </p>
+                            <div class="reaction-bar">
+                                <span class="reaction-total-text"><span class="reaction-total"><%= (post.reactions || []).length %></span> <%= (post.reactions || []).length === 1 ? 'person' : 'people' %> reacted</span>
+                                <span class="reaction-label">Choose reaction:</span>
+                                <% const reactionTypes = [{t:'like', icon:'hand-thumbs-up'}, {t:'love', icon:'heart'}, {t:'laugh', icon:'emoji-laughing'}, {t:'wow', icon:'emoji-surprise'}, {t:'sad', icon:'emoji-frown'}, {t:'angry', icon:'emoji-angry'}]; %>
+                                <% reactionTypes.forEach(function(r){ %>
+                                <button type="button" class="btn btn-sm btn-outline-secondary reaction-btn <%= (currentUserReaction && currentUserReaction.type === r.t) ? 'active-reaction' : '' %>" data-id="<%= post._id %>" data-type="<%= r.t %>" title="<%= r.t %>">
+                                    <i class="bi bi-<%= r.icon %>"></i>
+                                    <span class="reaction-count" data-type="<%= r.t %>"><%= (post.reactions || []).filter(function(x){ return x.type === r.t; }).length %></span>
+                                </button>
+                                <% }); %>
+                            </div>
+                            <div class="comments-section comments" data-post-id="<%= post._id %>" data-post-owner-id="<%= post.author._id %>" data-current-user-id="<%= user._id %>">
+                                <button type="button" class="comments-toggle-btn section-title btn btn-link btn-sm p-0 text-start d-flex align-items-center gap-1" aria-expanded="true">
+                                    <i class="bi bi-chevron-down comments-toggle-icon"></i>
+                                    <span>Comments</span>
+                                    <span class="comments-count">(<%= (post.comments || []).length %>)</span>
+                                </button>
+                                <div class="comments-content">
+                                <div class="comment-list">
+                                    <% (post.commentsTopLevel || []).forEach(function(c){ %>
+                                    <% const canDeleteC = post.author && String(post.author._id) === String(user._id); %>
+                                    <div class="comment-block mb-2" data-comment-id="<%= c._id %>" data-parent-id="">
+                                        <div class="comment-row d-flex justify-content-between align-items-start flex-wrap gap-1 p-2 rounded bg-light">
+                                            <div class="d-flex flex-column">
+                                                <span class="fw-semibold small"><%= c.author.username %></span>
+                                                <span class="small"><%= c.text %></span>
+                                                <span class="small text-muted"><%= c.createdAt ? new Date(c.createdAt).toLocaleString() : '' %></span>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-1">
+                                                <div class="comment-reactions d-flex flex-wrap gap-1">
+                                                    <% const reactionTypes = [{t:'like', icon:'hand-thumbs-up'}, {t:'love', icon:'heart'}, {t:'laugh', icon:'emoji-laughing'}, {t:'wow', icon:'emoji-surprise'}, {t:'sad', icon:'emoji-frown'}, {t:'angry', icon:'emoji-angry'}]; %>
+                                                    <% reactionTypes.forEach(function(r){ %>
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary p-1 comment-reaction-btn" data-comment-id="<%= c._id %>" data-type="<%= r.t %>" title="<%= r.t %>">
+                                                        <i class="bi bi-<%= r.icon %>"></i><span class="comment-reaction-count" data-type="<%= r.t %>"><%= (c.reactions || []).filter(function(x){ return x.type === r.t; }).length %></span>
+                                                    </button>
+                                                    <% }); %>
+                                                </div>
+                                                <button type="button" class="btn btn-link btn-sm p-0 reply-toggle-btn">Reply</button>
+                                                <% if (canDeleteC) { %>
+                                                <button type="button" class="btn btn-link btn-sm p-0 text-danger delete-comment-btn" data-comment-id="<%= c._id %>"><i class="bi bi-trash"></i></button>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                        <div class="reply-form-wrap d-none mt-1 ms-3">
+                                            <form class="reply-form d-flex gap-2">
+                                                <input type="text" class="form-control form-control-sm reply-input" placeholder="Reply..." name="text">
+                                                <button type="submit" class="btn btn-sm btn-primary">Send</button>
+                                            </form>
+                                        </div>
+                                        <div class="replies ms-3 mt-1">
+                                            <% (c.replies || []).forEach(function(r){ %>
+                                            <% const canDeleteR = post.author && String(post.author._id) === String(user._id); %>
+                                            <div class="comment-block mb-2" data-comment-id="<%= r._id %>" data-parent-id="<%= c._id %>">
+                                                <div class="comment-row d-flex justify-content-between align-items-start flex-wrap gap-1 p-2 rounded bg-light">
+                                                    <div class="d-flex flex-column">
+                                                        <span class="fw-semibold small"><%= r.author.username %></span>
+                                                        <span class="small"><%= r.text %></span>
+                                                        <span class="small text-muted"><%= r.createdAt ? new Date(r.createdAt).toLocaleString() : '' %></span>
+                                                    </div>
+                                                    <div class="d-flex align-items-center gap-1">
+                                                        <div class="comment-reactions d-flex flex-wrap gap-1">
+                                                            <% reactionTypes.forEach(function(rr){ %>
+                                                            <button type="button" class="btn btn-sm btn-outline-secondary p-1 comment-reaction-btn" data-comment-id="<%= r._id %>" data-type="<%= rr.t %>" title="<%= rr.t %>">
+                                                                <i class="bi bi-<%= rr.icon %>"></i><span class="comment-reaction-count" data-type="<%= rr.t %>"><%= (r.reactions || []).filter(function(x){ return x.type === rr.t; }).length %></span>
+                                                            </button>
+                                                            <% }); %>
+                                                        </div>
+                                                        <% if (canDeleteR) { %>
+                                                        <button type="button" class="btn btn-link btn-sm p-0 text-danger delete-comment-btn" data-comment-id="<%= r._id %>"><i class="bi bi-trash"></i></button>
+                                                        <% } %>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <% }); %>
+                                        </div>
+                                    </div>
+                                    <% }); %>
+                                </div>
+                                <form class="comment-form d-flex gap-2 mt-2">
+                                    <input type="text" class="form-control form-control-sm comment-input" placeholder="Write a comment..." name="text">
+                                    <button type="submit" class="btn btn-sm btn-primary">Send</button>
+                                </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <% }) %>
+                </div>
+            </div>
+<%- include('/admin/partials/bottom.ejs')%>
