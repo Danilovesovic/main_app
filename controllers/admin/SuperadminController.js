@@ -1,4 +1,5 @@
 const User = require('../../models/User');
+const bcrypt = require('bcryptjs');
 
 const index =async (req, res) => {
     let allUsers =await User.find({});
@@ -18,7 +19,10 @@ const create = async (req, res) => {
        user: req.session.user});
 }
 const store =async (req,res) => {
+
     let {username, email, password, role,flag} = req.body;
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(password, salt);
     //AKo je baza prazna, prvi User ce biti main Superadmin koga nece moci niko da obrise
     let allUsers = await User.find({});
     let emptyBase = (allUsers.length === 0) ? true : false;
@@ -26,7 +30,7 @@ const store =async (req,res) => {
     const user =await User.create({
         username,
         email,
-        password,
+        password: hashPassword,
         role,
         main: emptyBase,
         flag 
