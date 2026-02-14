@@ -10,6 +10,8 @@ router.get('/register', isGuest, function(req, res){
     res.render('register');
 });
 
+router.get('/user', require('../controllers/sessions/UserController.js'));
+
 router.get('/logout', function(req, res){
     req.session.destroy();
     res.redirect('/');
