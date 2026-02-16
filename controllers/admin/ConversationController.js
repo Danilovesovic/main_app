@@ -24,7 +24,6 @@ const getConversations = async (req, res) => {
 
 			return {
 				_id: conversation._id,
-				conversationKey: conversation.conversationKey,
 				participants: conversation.participants,
 				lastMessage: conversation.lastMessage,
 				hasUnread,

@@ -24,12 +24,12 @@
 	});
 
 	// New messages arrive here
-	socket.on('receive_message', ({ conversationKey, from, to, newMessage, participants }) => {
+	socket.on('receive_message', ({ conversationId, from, to, newMessage, participants }) => {
 		if (isAdminMessagesPage()) {
-			const convo = conversations.find((c) => c.conversationKey === conversationKey);
+			const convo = conversations.find((c) => c._id === conversationId);
 
 			if (convo) {
-				if (activeConversation?.conversationKey === conversationKey) {
+				if (activeConversation?._id === conversationId) {
 					convo.messages.push(newMessage);
 					renderMessages();
 				} else {
@@ -37,7 +37,7 @@
 				}
 			} else {
 				const newConvo = {
-					conversationKey,
+					_id: conversationId,
 					participants,
 					from,
 					to,
@@ -118,7 +118,7 @@
 			btn.className = `list-group-item list-group-item-action`;
 			btn.textContent = reciverParticipant.username;
 
-			if (convo.conversationKey === activeConversation?.conversationKey) {
+			if (convo._id === activeConversation?._id) {
 				btn.classList.add('active');
 			}
 
@@ -184,6 +184,7 @@
 		}
 
 		socket.emit('private_message', {
+			conversationId: activeConversation._id,
 			to: { userId: reciver._id, username: reciver.username },
 			message: text, // @todo: Change message to text
 		});

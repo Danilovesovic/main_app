@@ -10,11 +10,6 @@ const ConversationSchema = new Schema(
 				required: true,
 			},
 		],
-		conversationKey: {
-			type: String,
-			required: true,
-			unique: true,
-		},
 		lastMessage: {
 			type: Schema.Types.ObjectId,
 			ref: 'Message',

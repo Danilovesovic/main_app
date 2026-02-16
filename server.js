@@ -67,19 +67,17 @@ io.on('connection', (socket) => {
 	socket.on('private_message', async (private_message) => {
 		// console.log('private_message ', private_message);
 
-		const { to, message } = private_message;
+		const { to, message, conversationId } = private_message;
 		const fromUser = socket.user;
 
 		const participants = [fromUser._id, to.userId].sort();
-		const conversationKey = participants.join('_');
 
 		/*  */
-		let conversation = await Conversation.findOne({ conversationKey });
+		let conversation = await Conversation.findOne({ _id: conversationId });
 
 		if (!conversation?._id) {
 			conversation = await Conversation.create({
 				participants,
-				conversationKey,
 				lastReadAt: participants.map((userId) => ({
 					user: userId,
 					date: new Date(),
@@ -105,7 +103,7 @@ io.on('connection', (socket) => {
 		);
 
 		io.to(sendTo).emit('receive_message', {
-			conversationKey,
+			conversationId: conversation._id,
 			from: { userId: fromUser._id, username: fromUser.username },
 			to, // @todo: Remove this "to". Looks is unnecessary here
 			newMessage,
