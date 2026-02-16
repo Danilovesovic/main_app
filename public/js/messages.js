@@ -20,7 +20,6 @@
 	// Listeners
 	socket.on('connect', () => {
 		console.log('WS Connected:', socket.id);
-		socket.emit('register', user);
 	});
 
 	// New messages arrive here

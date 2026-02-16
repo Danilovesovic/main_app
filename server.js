@@ -36,9 +36,6 @@ server.listen(3000, function () {
 	console.log('Server is running on port 3000');
 });
 
-// @todo: Not that good idea. Use socket.join(userId) instead of ONLINE_USERS
-const ONLINE_USERS = new Map();
-
 io.use((socket, next) => withSession(socket.request, {}, next));
 io.use((socket, next) => {
 	const user = socket.request.session?.user;
@@ -54,14 +51,11 @@ io.use((socket, next) => {
 io.on('connection', (socket) => {
 	// console.log('connection');
 
+	const userId = socket.user._id.toString();
+	socket.join(userId);
+
 	socket.on('disconnect', () => {
 		// console.log('disconnect');
-		ONLINE_USERS.delete(socket.user?._id);
-	});
-
-	socket.on('register', (user) => {
-		// console.log('register');
-		ONLINE_USERS.set(user.id, socket.id);
 	});
 
 	socket.on('private_message', async (private_message) => {
@@ -98,9 +92,7 @@ io.on('connection', (socket) => {
 		});
 		/*  */
 
-		const sendTo = [ONLINE_USERS.get(fromUser._id), ONLINE_USERS.get(to.userId)].filter(
-			Boolean
-		);
+		const sendTo = [fromUser._id.toString(), to.userId.toString()]
 
 		io.to(sendTo).emit('receive_message', {
 			conversationId: conversation._id,
