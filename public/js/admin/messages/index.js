@@ -156,6 +156,7 @@
 
 		chatMessagesContainer.innerHTML = '';
 
+		// @todo: The messages arr can expand a lot over time. Add virtualization or load the last {{n}} messages.
 		activeConversation.messages.forEach((msg) => {
 			const wrapper = document.createElement('div');
 

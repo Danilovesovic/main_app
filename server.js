@@ -84,7 +84,7 @@ io.on('connection', (socket) => {
 			sender: fromUser._id,
 			text: message,
 		});
-		newMessage.populate('sender', 'username');
+		await newMessage.populate('sender', 'username');
 
 		await Conversation.findByIdAndUpdate(conversation._id, {
 			lastMessage: newMessage._id,
