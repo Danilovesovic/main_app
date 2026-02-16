@@ -158,12 +158,17 @@
 
 		activeConversation.messages.forEach((msg) => {
 			const wrapper = document.createElement('div');
-			wrapper.className = `d-flex mb-2 ${msg.sender._id === user.id ? 'justify-content-end' : 'justify-content-start'}`;
 
+			const isMineMessage = msg.sender._id === user.id;
+
+			wrapper.className = `d-flex mb-2 ${isMineMessage ? 'justify-content-end' : 'justify-content-start'}`;
 			wrapper.innerHTML = `
-							<div class="p-2 rounded ${msg.sender._id === user.id ? 'bg-primary text-white' : 'bg-white border'}" style="max-width: 70%;">
-								${msg.text}
+						<div class="rounded ${isMineMessage ? 'bg-primary text-white' : 'bg-white border'}" style="max-width: 70%;">
+							<div class="small fw-bold border-bottom px-2 pb-1 pt-1 ${isMineMessage ? 'text-end text-white border-info' : 'text-start text-muted border-secondary'}" style="font-size: 0.75rem;">
+								${isMineMessage ? 'You' : msg.sender.username}
 							</div>
+							<div class="p-2">${msg.text}</div>
+						</div>
 						`;
 
 			chatMessagesContainer.appendChild(wrapper);
