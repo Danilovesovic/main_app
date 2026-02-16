@@ -8,6 +8,16 @@
 
 	let conversations = await getConversations();
 
+	if (!isAdminMessagesPage()) {
+		const hasUnreadMessages = conversations?.some((c) => c?.hasUnread);
+
+		if (hasUnreadMessages) {
+			const sidebarMessagesTab = document.getElementById('messages-tab');
+
+			sidebarMessagesTab.classList.add('unread-message');
+		}
+	}
+
 	const user = await getSessionUser();
 
 	if (!user?.id) {
@@ -54,7 +64,8 @@
 
 			renderConversations();
 		} else {
-			// @todo: Add red circle on Messages tab in the sidebar. CONTINUE FROM HERE!
+			const sidebarMessagesTab = document.getElementById('messages-tab');
+			sidebarMessagesTab.classList.add('unread-message');
 		}
 	});
 
@@ -122,7 +133,7 @@
 			}
 
 			if (convo.hasUnread) {
-				btn.classList.add('conversation-btn');
+				btn.classList.add('unread-message');
 			}
 
 			btn.onclick = async function () {
@@ -135,7 +146,7 @@
 
 				activeConversation.messages = messages;
 
-				btn.classList.remove('conversation-btn');
+				btn.classList.remove('unread-message');
 
 				renderConversations();
 				renderMessages();

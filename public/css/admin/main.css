@@ -114,12 +114,12 @@
     border-radius: 6px;
 }
 
-/* Messages */
-.conversation-btn {
+/* /messages page */
+.unread-message {
 	position: relative;
 }
 
-.conversation-btn::after {
+.unread-message::after {
 	content: '';
 	position: absolute;
 	top: 50%;
