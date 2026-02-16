@@ -1,5 +1,6 @@
 const TaskController = require('../controllers/admin/TaskController.js');
 const PostController = require('../controllers/admin/PostController.js');
+const ConversationController = require('../controllers/admin/ConversationController.js');
 const uploadPostMedia = require('../middlewares/uploadPostMedia');
 const express = require('express');
 const router = express.Router();
@@ -21,5 +22,7 @@ router.delete('/social/comment/:id', PostController.destroyComment)
 router.post('/social/comment/:id/reaction', PostController.addCommentReaction)
 
 router.get('/messages', require('../controllers/admin/MessagesController.js'));
+router.get('/conversation', ConversationController.getConversations);
+router.get('/message/:conversationId', ConversationController.getMessages);
 
 module.exports = router;

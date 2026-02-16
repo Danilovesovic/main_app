@@ -113,3 +113,21 @@
 .images-preview img {
     border-radius: 6px;
 }
+
+/* Messages */
+.conversation-btn {
+	position: relative;
+}
+
+.conversation-btn::after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	right: 16px;
+	transform: translateY(-50%);
+	width: 10px;
+	height: 10px;
+	background-color: red;
+	border-radius: 100%;
+}
+/* End: Messages */
