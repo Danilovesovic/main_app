@@ -9,13 +9,7 @@
 	let conversations = await getConversations();
 
 	if (!isAdminMessagesPage()) {
-		const hasUnreadMessages = conversations?.some((c) => c?.hasUnread);
-
-		if (hasUnreadMessages) {
-			const sidebarMessagesTab = document.getElementById('messages-tab');
-
-			sidebarMessagesTab.classList.add('unread-message');
-		}
+		updateUnreadIndicator(conversations);
 	}
 
 	const user = await getSessionUser();
@@ -200,26 +194,6 @@
 		});
 
 		messageInput.value = '';
-	}
-
-	function getSessionUser() {
-		return fetch('/user').then((res) => res.json());
-	}
-
-	async function getConversations() {
-		return fetch('/admin/conversation').then((res) => res.json());
-	}
-
-	async function getConversationMessages(conversationId) {
-		if (!conversationId) {
-			return [];
-		}
-
-		return fetch(`/admin/message/${conversationId}`).then((res) => res.json());
-	}
-
-	function isAdminMessagesPage() {
-		return window.location.pathname === '/admin/messages';
 	}
 
 	renderConversations();
