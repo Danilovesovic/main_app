@@ -130,4 +130,8 @@
 	background-color: red;
 	border-radius: 100%;
 }
+
+.message-text {
+	white-space: pre-wrap;
+}
 /* End: Messages */

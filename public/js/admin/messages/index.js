@@ -3,7 +3,7 @@
 	const activeUserName = document.querySelector('#activeUserName');
 	const conversationList = document.querySelector('#conversationList');
 	const chatMessagesContainer = document.querySelector('#chatMessages');
-	const messageInput = document.querySelector('#messageInput');
+	const messageTextArea = document.querySelector('#messageTextArea');
 	const sendBtn = document.querySelector('#sendBtn');
 
 	let conversations = await getConversations();
@@ -26,7 +26,7 @@
 		console.log('WS Connected:', socket.id);
 	});
 
-	// New messages arrive here
+	// new messages arrive here
 	socket.on('receive_message', ({ conversationId, from, to, newMessage, participants }) => {
 		if (isAdminMessagesPage()) {
 			const convo = conversations.find((c) => c._id === conversationId);
@@ -103,8 +103,13 @@
 		});
 
 		sendBtn.addEventListener('click', sendMessage);
-		messageInput.addEventListener('keypress', (e) => {
-			if (e.key === 'Enter') sendMessage();
+		messageTextArea.addEventListener('input', () => {
+			// this handles textarea vertical grow
+			messageTextArea.style.height = 'auto';
+			messageTextArea.style.height = messageTextArea.scrollHeight + 'px';
+
+			// this will scroll the messages container to the last message on the textarea height expand
+			chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
 		});
 	}
 
@@ -117,10 +122,10 @@
 		conversations.forEach((convo) => {
 			const btn = document.createElement('button');
 
-			const reciverParticipant = convo.participants.find((p) => p._id !== user.id);
+			const reciver = convo.participants.find((p) => p._id !== user.id);
 
 			btn.className = `list-group-item list-group-item-action`;
-			btn.textContent = reciverParticipant.username;
+			btn.textContent = reciver.username;
 
 			if (convo._id === activeConversation?._id) {
 				btn.classList.add('active');
@@ -134,7 +139,7 @@
 				convo.hasUnread = false;
 				activeConversation = convo;
 
-				activeUserName.textContent = reciverParticipant.username;
+				activeUserName.textContent = reciver.username;
 
 				const messages = await getConversationMessages(convo._id);
 
@@ -168,7 +173,7 @@
 							<div class="small fw-bold border-bottom px-2 pb-1 pt-1 ${isMineMessage ? 'text-end text-white border-info' : 'text-start text-muted border-secondary'}" style="font-size: 0.75rem;">
 								${isMineMessage ? 'You' : msg.sender.username}
 							</div>
-							<div class="p-2">${msg.text}</div>
+							<div class="p-2 message-text">${msg.text}</div>
 						</div>
 						`;
 
@@ -181,15 +186,15 @@
 	function sendMessage() {
 		if (!isAdminMessagesPage()) return;
 
-		const text = messageInput.value.trim();
+		const text = messageTextArea.value?.trim();
 
-		if (!activeConversation?.participants?.length) {
+		if (!activeConversation?.participants?.length || !text?.length) {
 			return;
 		}
 
 		const reciver = activeConversation.participants.find((p) => p._id !== user.id);
 
-		if (!text?.length || !reciver?._id) {
+		if (!reciver?._id) {
 			return;
 		}
 
@@ -199,7 +204,9 @@
 			message: text, // @todo: Change message to text
 		});
 
-		messageInput.value = '';
+		messageTextArea.value = '';
+		messageTextArea.style.height = 'auto';
+		messageTextArea.focus();
 	}
 
 	renderConversations();
