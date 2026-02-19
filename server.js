@@ -2,6 +2,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const express = require('express');
 const session = require('express-session');
+const path = require('path');
 const router = require('./router');
 const db = require('./database');
 const Conversation = require('./models/Conversation');

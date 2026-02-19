@@ -19,6 +19,10 @@ const UserSchema = new Schema({
         unique: true,
         require: true
     },
+    profileImage: {
+        type: String,
+        default: '/uploads/profiles/default.png'
+    },
     role : {
         type: String,
         enum: ["admin", "superadmin"],
