@@ -1,12 +1,29 @@
 const User = require('../../models/User');
 const bcrypt = require('bcryptjs');
 
+
+
 const index =async (req, res) => {
+
     let allUsers =await User.find({});
+
+    // Postavi main=true za prvog user-au bazi
+    const mainUser = await User.findOne({ main: true });
+    if (!mainUser) {
+
+        // Uzmi prvog korisnika u bazi
+        const firstUser = await User.findOne().sort({ _id: 1 });
+
+        if (firstUser) {
+            firstUser.main = true;
+            await firstUser.save();
+        }
+    }
+
    res.render('admin/superadmin/index', { 
         users: allUsers,
         title: "Superuser",
-        user: req.session.user  
+       loggedUser: req.session.user  
     });
 }
 const create = async (req, res) => {
@@ -16,11 +33,12 @@ const create = async (req, res) => {
    res.render('admin/superadmin/create', {
        users: allUsers,
        title: 'Create User',
-       user: req.session.user});
+       user: req.session.user
+   });
 }
 const store =async (req,res) => {
 
-    let {username, email, password, role,flag} = req.body;
+    let { username, email, password, role, main, flag } = req.body;
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
     //AKo je baza prazna, prvi User ce biti main Superadmin koga nece moci niko da obrise
@@ -32,7 +50,7 @@ const store =async (req,res) => {
         email,
         password: hashPassword,
         role,
-        main: emptyBase,
+        main,
         flag 
 
     });

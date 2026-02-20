@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 
 const RegisterController = async (req, res) => {
     const {username, email, password} = req.body;
+
     try {
 
         const testUser = await User.findOne({email}); // {}
@@ -13,7 +14,7 @@ const RegisterController = async (req, res) => {
         }
         const salt = await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(password, salt);
-        const newUser = new User({username, email, password: hashPassword});
+        const newUser = new User({ username, email, password: hashPassword, role: admin, main: false });
         await newUser.save();
         // ???
         res.redirect('/');

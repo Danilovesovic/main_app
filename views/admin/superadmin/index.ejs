@@ -10,10 +10,11 @@
     <link rel="stylesheet" href="/bootstrap-icons.css">
     <link rel="stylesheet" href="/css/admin/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="./superadmin.css">
 
 </head>
 <body>
-<%- include('../partials/navbar.ejs', { user: user })%>
+<%- include('../partials/navbar.ejs', { user: loggedUser})%>
 <div class="container-fluid mt-5">
     <div class="row">
         <%- include('../partials/sidebar.ejs', {title: "Superadmin"})%>
@@ -31,16 +32,20 @@
                             <th>User</th>
                             <th>Role</th>
                             <th>Flag</th>
+                            <% if (loggedUser.role==='superadmin' && loggedUser.main===true) { %>
                             <th>Delete</th>
+                            <% } %>
                         </tr>
                         </thead>
                         <tbody>
                         <% users.forEach(function(user){ %>
                             <tr>
                                 <td><%= user.username%></td>
-                                <td class="role-expand <%= user.main == false ? 'clickable' : '' %>" data-user-id="<%= user._id %>"
+                                <td class="role-expand <%= loggedUser.main == true ? 'clickable role-dropdown-menu' : '' %>"
+                                    data-user-id="<%= user._id %>"
                                     data-role="<%= user.role %>">
                                     <%= user.role || '' %>
+                                        <%= user.main ? '*' : '' %>
                                 </td>
 <td>
 <% if (user.flag) { %>
@@ -70,10 +75,12 @@
         <%= '' %>
             <% } %>
                 </td>
+                <% if (loggedUser.role==='superadmin' && loggedUser.main===true) { %>
                                 <td>
-                                    <i data-id="<%= user._id %>" class="<%= user.main == false ? 'superadmin-delete-btns bi-trash' : '' %> "></i>
+                                    <i data-id="<%= user._id %>"
+                                        class="<%= (user.main == false && (user.username !== loggedUser.username) ) ? 'superadmin-delete-btns bi-trash' : '' %> "></i>
                                 </td>
-                               
+                            <% } %>
                             </tr>
                         <% }) %>
 
@@ -88,8 +95,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 <script>
                     let roleBtns = document.querySelectorAll('.role-expand');
-   let deleteBtns = document.querySelectorAll('.superadmin-delete-btns');
-    let flagBtns = document.querySelectorAll('.change-flag');
+                                                                                                                        let deleteBtns = document.querySelectorAll('.superadmin-delete-btns');
+                                                                                                                        let flagBtns = document.querySelectorAll('.change-flag');
 
                     roleBtns.forEach(role => role.addEventListener('click', changeRole));
                     deleteBtns.forEach(btn => btn.addEventListener('click', deleteUser));
@@ -155,11 +162,31 @@
    }
             function changeRole(e) {
                 const cell = e.target;
-
+                e.stopPropagation();     //**********
                 if (!cell.classList.contains('clickable')) return;
+
+                // Ako već postoji select, ne pravimo novi
+                // if (cell.querySelector('select')) return;                   //***********
 
                 const userId = cell.dataset.userId;
                 const currentRole = cell.dataset.role;
+
+                roleBtns.forEach(c => {                             //*******
+                    if (c !== cell) {
+                        c.classList.remove('active');
+                        const sel = c.querySelector('select');
+                        if (sel) {
+                            c.innerHTML = sel.value; // vraća trenutnu vrednost
+                        }
+                    }
+                });
+
+                // Ako dropdown već postoji za ovaj cell, samo fokusiraj
+                let existingSelect = cell.querySelector('select');
+                if (existingSelect) {
+                    existingSelect.focus();
+                    return;
+                }
 
                 // select za main superadmin-a
                 const select = document.createElement('select');
@@ -174,6 +201,7 @@
 
                 cell.innerHTML = '';
                 cell.appendChild(select);
+                select.focus();
 
                 // kada promeniš vrednost
                 select.addEventListener('change', async function () {
@@ -194,7 +222,17 @@
                             cell.innerHTML = newRole;
                         });
                 });
-            }
+                document.addEventListener('click', () => {
+                    roleBtns.forEach(cell => {
+                        const select = cell.querySelector('select');
+                        if (select) {
+                            cell.innerHTML = select.value; // update sa trenutnom vrednošću
+                        }
+                        cell.classList.remove('active');
+                    });
+                });
+                            }
+                        
  
 </script>
 </body>

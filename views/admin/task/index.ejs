@@ -18,7 +18,9 @@
         <div class="col-10">
             <div class="d-flex align-items-center mb-3">
                 <h1>All Tasks</h1>
+                <% if (user.role==='superadmin' ) { %>
                 <a href="/admin/task/create" class="btn btn-outline-primary ms-auto">New Task</a>
+                <% } %>
             </div>
             <hr>
             <div class="row">
@@ -53,7 +55,7 @@
                                 </td>
                                 <td><%= task.status %></td>
                                 <td>
-                                    <% if (task.isOwner(user._id)) {%>
+                                    <% if (task.isOwner(user._id) || (user.main==true)) {%>
                                     <i data-id="<%= task._id %>" class="delete-btns bi-trash"></i>
                                         <% } %>
                                     <i class="bi-pen"></i>
@@ -111,13 +113,16 @@
 
    function deleteTask(e){
        let id = e.target.getAttribute('data-id');
+
        fetch(`/admin/task/${id}`, { method: 'delete' })
-           .then(res => res.json())
+           .then(res => {
+               return res.json()
+           })
            .then(data => {
                if(data.msg === 'Task deleted successfully'){
                    location.reload();
                }else {
-                alert('Something went wrong');
+                   alert('Something went wrong FE');
                }
            })
    }

@@ -12,7 +12,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-<%- include('/admin/partials/navbar.ejs')%>
+<%- include('../partials/navbar.ejs', {user})%>
 <div class="container-fluid mt-5">
     <div class="row">
         <%- include('/admin/partials/sidebar.ejs')%>
@@ -37,6 +37,7 @@
                             <label for="password">password</label>
                             <input name="password" id="password" class="form-control" placeholder="Enter password"></input>
                         </div>
+                        <% if (user.role==='superadmin' && user.main===true) { %>
                         <div class="mb-3">
                             <label for="role">Role</label>
                             <select name="role" id="role" class="form-select">
@@ -45,14 +46,7 @@
                                  <option value="superadmin">Superadmin</option>
                             </select>
                         </div>
-                        <!-- <div class="mb-3">
-                            <label for="flag">Flag</label>
-                            <select name="flag" id="flag" class="form-select">
-                                <option value="green" selected>Green</option>
-                                 <option value="orange">Orange</option>
-                                 <option value="red">Red</option>
-                            </select>
-                        </div> -->
+                        <% } %>
                         <div class="btn-group mb-3" role="group">
                         
                             <input type="radio" class="btn-check" name="flag" id="green" value="green" checked>
