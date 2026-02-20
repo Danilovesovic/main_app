@@ -12,7 +12,7 @@ const index = async (req, res) => {
         await user.save(); 
     }
     
-    // Proveri da li fajl postoji u folderu assets/profiles
+    // Proveri da li fajl postoji u folderu uploads/profiles
     const imagePath = path.join(__dirname, '../../public', user.profileImage);
     if (!fs.existsSync(imagePath)) {
         user.profileImage = '/assets/profiles/default.png';
@@ -45,7 +45,7 @@ const uploadImage = async (req, res) => {
         }
 
         // Sačuvamo path u bazi
-        const imagePath = '/assets/profiles/' + req.file.filename;
+        const imagePath = '/uploads/profiles/' + req.file.filename;
         user.profileImage = imagePath;
         await user.save();
         
