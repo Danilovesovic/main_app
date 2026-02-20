@@ -8,14 +8,14 @@ const index = async (req, res) => {
     
     // Ako nema slike u bazi, postavi default
     if (!user.profileImage) {  
-        user.profileImage = '/uploads/profiles/default.png';
+        user.profileImage = '/assets/profiles/default.png';
         await user.save(); 
     }
     
-    // Proveri da li fajl postoji u folderu uploads/profiles
+    // Proveri da li fajl postoji u folderu assets/profiles
     const imagePath = path.join(__dirname, '../../public', user.profileImage);
     if (!fs.existsSync(imagePath)) {
-        user.profileImage = '/uploads/profiles/default.png';
+        user.profileImage = '/assets/profiles/default.png';
         await user.save();
     }
     
@@ -36,7 +36,7 @@ const uploadImage = async (req, res) => {
         const user = await User.findById(req.session.user._id);
         
         // Obriši stari fajl (samo ako nije default slika)
-        if (user.profileImage && user.profileImage !== '/uploads/profiles/default.png') {
+        if (user.profileImage && user.profileImage !== '/assets/profiles/default.png') {
             const oldImagePath = path.join(__dirname, '../../public', user.profileImage);
             
             if (fs.existsSync(oldImagePath)) {
@@ -45,7 +45,7 @@ const uploadImage = async (req, res) => {
         }
 
         // Sačuvamo path u bazi
-        const imagePath = '/uploads/profiles/' + req.file.filename;
+        const imagePath = '/assets/profiles/' + req.file.filename;
         user.profileImage = imagePath;
         await user.save();
         
