@@ -6,18 +6,18 @@ const UserSchema = new Schema({
         type: String,
         maxlength: 20,
         minlength: 3,
-        require: true
+        required: true
     },
     password: {
         type: String,
         maxlength: 100,
         minlength: 5,
-        require: true
+        required: true
     },
     email: {
         type: String,
         unique: true,
-        require: true
+        required: true
     },
     profileImage: {
         type: String,
@@ -31,7 +31,16 @@ const UserSchema = new Schema({
     favoritePosts: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Post'
-    }]
+    }],
+    main: {
+        type: Boolean,
+        default: false
+    },
+    flag: {
+        type: String,
+        enum: ["green", "orange", "red"],
+        default: "green"
+    }
 })
 
 

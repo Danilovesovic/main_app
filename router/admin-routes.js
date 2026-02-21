@@ -4,6 +4,8 @@ const ConversationController = require('../controllers/admin/ConversationControl
 const uploadPostMedia = require('../middlewares/uploadPostMedia');
 const ProfileController = require('../controllers/admin/ProfileController.js');
 const upload = require('../middlewares/upload');
+const SuperadminController = require('../controllers/admin/SuperadminController.js');
+const isSuperadmin = require('../middlewares/isSuperadmin');
 const express = require('express');
 const router = express.Router();
 
@@ -35,4 +37,18 @@ router.get('/messages', require('../controllers/admin/MessagesController.js'));
 router.get('/conversation', ConversationController.getConversations);
 router.get('/message/:conversationId', ConversationController.getMessages);
 
+
+router.get('/superadmin', isSuperadmin, SuperadminController.index)
+router.get('/superadmin/create', SuperadminController.create)
+router.post('/superadmin', SuperadminController.store)
+router.delete('/superadmin/:id', SuperadminController.destroy)
+
+router.patch('/superadmin/:userId/flag', SuperadminController.updateFlag)
+router.patch('/superadmin/:userId/role', SuperadminController.updateRole);
+
+
+
+
 module.exports = router;
+
+

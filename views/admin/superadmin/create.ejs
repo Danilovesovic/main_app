@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="/bootstrap.css">
+    <link rel="stylesheet" href="/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/admin/main.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<%- include('../partials/navbar.ejs', {user})%>
+<div class="container-fluid mt-5">
+    <div class="row">
+        <%- include('/admin/partials/sidebar.ejs')%>
+        <div class="col-10">
+            <div class="d-flex align-items-center mb-3">
+                <h1>New User</h1>
+                <a href="/admin/superadmin" class="btn btn-outline-primary ms-auto">Cancel</a>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-8 offset-2">
+                    <form action="/admin/superadmin" method="post">
+                       <div class="mb-3">
+                           <label for="title">Username</label>
+                           <input type="text" name="username" class="form-control" id="username" placeholder="Enter  username">
+                       </div>
+                        <div class="mb-3">
+                            <label for="email">email</label>
+                            <input name="email" id="email" class="form-control" placeholder="Enter email"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password">password</label>
+                            <input name="password" id="password" class="form-control" placeholder="Enter password"></input>
+                        </div>
+                        <% if (user.role==='superadmin' && user.main===true) { %>
+                        <div class="mb-3">
+                            <label for="role">Role</label>
+                            <select name="role" id="role" class="form-select">
+                                <option disabled hidden selected>Select user role</option>
+                                 <option value="admin">Admin</option>
+                                 <option value="superadmin">Superadmin</option>
+                            </select>
+                        </div>
+                        <% } %>
+                        <div class="btn-group mb-3" role="group">
+                        
+                            <input type="radio" class="btn-check" name="flag" id="green" value="green" checked>
+                            <label class="btn btn-outline-success" for="green">
+                                <i class="fa-solid fa-flag"></i>
+                            </label>
+                        
+                            <input type="radio" class="btn-check" name="flag" id="orange" value="orange">
+                            <label class="btn btn-outline-warning" for="orange">
+                                <i class="fa-regular fa-flag"></i>
+                            </label>
+                        
+                            <input type="radio" class="btn-check" name="flag" id="red" value="red">
+                            <label class="btn btn-outline-danger" for="red">
+                                <i class="fa-solid fa-flag"></i>
+                            </label>
+
+</div>
+
+                        
+                        <div class="mb-3">
+                            <button class="btn btn-primary w-50">Save</button>
+                        </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+</html>

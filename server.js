@@ -32,7 +32,7 @@ app.use(express.json());
 
 app.use('/', router);
 
-server.listen(3000, function () {
+server.listen(3300, function () {
 	console.log('Server is running on port 3000');
 });
 

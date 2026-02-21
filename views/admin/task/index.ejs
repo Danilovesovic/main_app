@@ -2,7 +2,9 @@
 <%- include('/admin/partials/top.ejs')%>
             <div class="d-flex align-items-center mb-3">
                 <h1>All Tasks</h1>
+                <% if (user.role==='superadmin' ) { %>
                 <a href="/admin/task/create" class="btn btn-outline-primary ms-auto">New Task</a>
+                <% } %>
             </div>
             <hr>
             <div class="row">
@@ -22,8 +24,12 @@
                         <% tasks.forEach(function(task){ %>
                             <tr>
                                 <td><%= task.title%></td>
-                                <td><%= task.assignedTo.username %></td>
-                                <td><%= task.assignedBy.username %></td>
+                                <td>
+                                    <%= task.assignedTo?.username || '' %>
+                                </td>
+                                <td>
+                                    <%= task.assignedBy?.username || '' %>
+                                </td>
                                 <td>
                                     <% if(task.public) {%>
                                     <i class="bi-eye fs-4 text-success"></i>
@@ -33,7 +39,7 @@
                                 </td>
                                 <td><%= task.status %></td>
                                 <td>
-                                    <% if (task.isOwner(user._id)) {%>
+                                    <% if (task.isOwner(user._id) || (user.main==true)) {%>
                                     <i data-id="<%= task._id %>" class="delete-btns bi-trash"></i>
                                         <% } %>
                                     <i class="bi-pen"></i>
@@ -67,3 +73,51 @@
   </div>
 </div>
 <%- include('/admin/partials/bottom.ejs')%>
+        </div>
+    </div>
+</div>
+
+<script src="/jquery.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<script>
+   let descBtns = document.querySelectorAll('.btn-decs');
+   let deleteBtns = document.querySelectorAll('.delete-btns');
+   deleteBtns.forEach(btn => {
+      btn.addEventListener('click', deleteTask)
+   })
+
+
+   descBtns.forEach(btn => {
+       btn.addEventListener('click', showDescription);
+   })
+
+
+
+   function deleteTask(e){
+       let id = e.target.getAttribute('data-id');
+
+       fetch(`/admin/task/${id}`, { method: 'delete' })
+           .then(res => {
+               return res.json()
+           })
+           .then(data => {
+               if(data.msg === 'Task deleted successfully'){
+                   location.reload();
+               }else {
+                   alert('Something went wrong FE');
+               }
+           })
+   }
+
+   function showDescription(e){
+       let desc = e.target.getAttribute('data-description');
+        let modal = new bootstrap.Modal(document.getElementById('exampleModal'))
+       let title = document.querySelector('.modal-title');
+        title.innerText = 'Description';
+        let body = document.querySelector('.modal-body');
+        body.innerText = desc;
+        modal.show();
+   }
+</script>
+</body>
+</html>
