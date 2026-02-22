@@ -30,6 +30,9 @@ const TaskSchema = new Schema({
 }, {timestamps: true});
 
 TaskSchema.methods.isOwner = function(userId){
+
+    if (!this.assignedBy || !userId) return false;
+
     let assignedBy = this.assignedBy._id || this.assignedBy;
     return String(userId) === String(assignedBy);
 }

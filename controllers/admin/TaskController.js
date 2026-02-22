@@ -2,6 +2,10 @@ const User = require('../../models/User');
 const Task = require('../../models/Task');
 
 const index =async (req, res) => {
+
+    if (!req.session.user) {
+        return res.redirect('/login');
+    }
     let allTasks =await Task.find({
         $or : [
             {assignedTo: req.session.user._id},
@@ -11,10 +15,8 @@ const index =async (req, res) => {
     }).populate('assignedTo')
         .populate('assignedBy');
 
-    Task.where({ public: true }).where({ assignedTo: req.session.user._id })
-        .populate('assignedTo')
-        .populate('assignedBy');
-    res.render('admin/task/index', { tasks: allTasks, title: 'Task', user: req.session.user, pageScript: '/js/admin/task-index.js' });
+
+    res.render('admin/task/index', { tasks: allTasks, title: 'Task', user: req.session.user || null, pageScript: '/js/admin/task-index.js' });
 }
 const create =async (req, res) => {
     const users = await User.find({})
