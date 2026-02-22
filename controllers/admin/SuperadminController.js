@@ -7,18 +7,21 @@ const index =async (req, res) => {
 
     let allUsers =await User.find({});
 
-    // Postavi main=true za prvog user-au bazi
-    const mainUser = await User.findOne({ main: true });
-    if (!mainUser) {
+    // // Postavi main=true za prvog user-a u bazi- Odustali smo
+   
+   
+    // const mainUser = await User.findOne({ main: true });
+    // if (!mainUser) {
 
-        // Uzmi prvog korisnika u bazi
-        const firstUser = await User.findOne().sort({ _id: 1 });
+    //     // Uzmi prvog korisnika u bazi
+    //     const firstUser = await User.findOne().sort({ _id: 1 });
 
-        if (firstUser) {
-            firstUser.main = true;
-            await firstUser.save();
-        }
-    }
+    //     if (firstUser) {
+    //         firstUser.main = true;
+    //         firstUser.role = "superadmin";
+    //         await firstUser.save();
+    //     }
+    // }
 
    res.render('admin/superadmin/index', { 
         users: allUsers,

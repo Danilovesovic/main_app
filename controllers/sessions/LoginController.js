@@ -1,6 +1,8 @@
 const bcrypt = require("bcryptjs");
 const User = require("../../models/User");
-const superAdminEmails = ['ivana@example.com', 'danilovesovic@example.com'];
+
+// MAIL-ovi koji mogu da se koriste za testiranje superadmina
+const superAdminEmails = ['ivana@example.com', 'danilovesovic@example.com', 'superadmin@example.com'];
 
 
 const LoginController = async (req, res) => {
@@ -13,6 +15,8 @@ const LoginController = async (req, res) => {
     if(!bpass){
       return res.redirect('/');
     }
+
+  // ********* Dok nemamo pravu bazu, za testiranje superadmina ko zeli START
   if (superAdminEmails.includes(user.email)) {
     // Svim korisnicima skloni main
     await User.updateMany(
@@ -26,10 +30,11 @@ const LoginController = async (req, res) => {
       { role: 'superadmin', main: true }
     );
 
-    //  Ažuriraj session objekat
+    //  Ažuriranje session objekta
     user.role = 'superadmin';
     user.main = true;
   }
+  // ********* Dok nemamo pravu bazu, za testiranje superadmina ko zeli  END
 
     req.session.user = user; // {}  _id
     res.redirect('/admin/dashboard');
