@@ -15,12 +15,18 @@
 
     <div class="d-flex align-items-center">
     </div>
-    <a href='/admin/profile' class="btn btn-outline-primary">
-                 <img src="<%= user?.profileImage || '/assets/profiles/default.png' %>"
-                 alt="<%= user.username %>"
-                 class="rounded-circle me-2"
-                 style="width: 40px; height: 40px; object-fit: cover;">
-                 <%= user.username %>
-    </a>
+      <div class="ms-auto d-flex gap-2">
+          <% if (user.role=='superadmin' ) { %>
+              <a href="/admin/superadmin" class="btn btn-outline-info d-flex justify-content-center align-items-center ">Superadmin</a>
+              <% } %>
+          <a href='/admin/profile' class="btn btn-outline-primary">
+                      <img src="<%= user?.profileImage || '/assets/profiles/default.png' %>"
+                      alt="<%= user.username %>"
+                      class="rounded-circle me-2"
+                      style="width: 40px; height: 40px; object-fit: cover;">
+                      <%= user.username %>
+          </a>
+     </div>
   </div>
+
 </nav>

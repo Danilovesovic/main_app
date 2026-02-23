@@ -2,7 +2,9 @@
 <%- include('/admin/partials/top.ejs')%>
             <div class="d-flex align-items-center mb-3">
                 <h1>All Tasks</h1>
+                <% if (user.role==='superadmin' ) { %>
                 <a href="/admin/task/create" class="btn btn-outline-primary ms-auto">New Task</a>
+                <% } %>
             </div>
             <hr>
             <div class="row">
@@ -22,8 +24,12 @@
                         <% tasks.forEach(function(task){ %>
                             <tr>
                                 <td><%= task.title%></td>
-                                <td><%= task.assignedTo.username %></td>
-                                <td><%= task.assignedBy.username %></td>
+                                <td>
+                                    <%= task.assignedTo?.username || '' %>
+                                </td>
+                                <td>
+                                    <%= task.assignedBy?.username || '' %>
+                                </td>
                                 <td>
                                     <% if(task.public) {%>
                                     <i class="bi-eye fs-4 text-success"></i>
@@ -33,7 +39,7 @@
                                 </td>
                                 <td><%= task.status %></td>
                                 <td>
-                                    <% if (task.isOwner(user._id)) {%>
+                                    <% if (user && (task.isOwner(user._id) || (user.main==true)) ){%>
                                     <i data-id="<%= task._id %>" class="delete-btns bi-trash"></i>
                                         <% } %>
                                     <i class="bi-pen"></i>
@@ -60,10 +66,12 @@
         ...
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
+        <button type="button" id="modal-close" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" id="modal-save" class="btn btn-primary">Save changes</button>
+        </div>
+        </div>
+        </div>
+        </div>
+
 <%- include('/admin/partials/bottom.ejs')%>
+    
