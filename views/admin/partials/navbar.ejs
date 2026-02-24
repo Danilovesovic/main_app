@@ -16,9 +16,11 @@
     <div class="d-flex align-items-center">
     </div>
       <div class="ms-auto d-flex gap-2">
-          <% if (user.role=='superadmin' ) { %>
-              <a href="/admin/superadmin" class="btn btn-outline-info d-flex justify-content-center align-items-center ">Superadmin</a>
-              <% } %>
+          <% if (user && (user.role=='superadmin' || user.role=='admin' )) { %>
+            <a href="/admin/superadmin" class="btn btn-outline-info d-flex justify-content-center align-items-center ">
+              <%= user.role%>
+            </a>
+            <% } %>
           <a href='/admin/profile' class="btn btn-outline-primary">
                       <img src="<%= user?.profileImage || '/assets/profiles/default.png' %>"
                       alt="<%= user.username %>"

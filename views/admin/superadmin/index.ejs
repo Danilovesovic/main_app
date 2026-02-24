@@ -17,10 +17,12 @@
 <%- include('../partials/navbar.ejs', { user: loggedUser})%>
 <div class="container-fluid mt-5">
     <div class="row">
-        <%- include('../partials/sidebar.ejs', {title: "Superadmin"})%>
+        <%- include('../partials/sidebar.ejs')%>
         <div class="col-10">
             <div class="d-flex align-items-center mb-3">
-                <h1>Superadmin</h1>
+                <h2 class="text-uppercase">
+                    <%= loggedUser.role%>
+                </h2>
                 <a href="/admin/superadmin/create" class="btn btn-outline-primary ms-auto">New User</a>
             </div>
             <hr>
@@ -230,7 +232,7 @@
                 const select = document.createElement('select');
                 select.className = 'form-select';
 
-                select.innerHTML = `
+                select.innerHTML = `<option value="user">User</option>
                                     <option value="admin">Admin</option>
                                     <option value="superadmin">Superadmin</option>
                                 `;

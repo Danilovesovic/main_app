@@ -27,6 +27,7 @@ const index =async (req, res) => {
         users: allUsers,
         title: "Superuser",
        loggedUser: req.session.user  
+
     });
 }
 const create = async (req, res) => {
@@ -43,10 +44,8 @@ const store =async (req,res) => {
 
     let { username, email, password, role, main, flag } = req.body;
     const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(password, salt);
-    //AKo je baza prazna, prvi User ce biti main Superadmin koga nece moci niko da obrise
-    let allUsers = await User.find({});
-    let emptyBase = (allUsers.length === 0) ? true : false;
+    const hashPassword = await bcrypt.hash(password, salt); 
+
 
     const user =await User.create({
         username,
