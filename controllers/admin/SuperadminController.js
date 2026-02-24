@@ -43,6 +43,7 @@ const create = async (req, res) => {
 const store =async (req,res) => {
 
     let { username, email, password, role, main, flag } = req.body;
+    let initTask = (role === 'admin' || role === 'superadmin') ? true : false;
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt); 
 
@@ -53,7 +54,8 @@ const store =async (req,res) => {
         password: hashPassword,
         role,
         main,
-        flag 
+        flag,
+        permissions: { createTask: initTask }
 
     });
 
@@ -117,6 +119,25 @@ const updateRole = async (req, res) => {
     }
 };
 
+const updatePermission = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const createTask = req.body.createTask;
+
+        const updatedUser = await User.findByIdAndUpdate(userId, {
+            $set: {
+                "permissions.createTask": createTask
+            }
+        },
+            { new: true });
+
+        res.json({ success: true, user: updatedUser });
+
+    } catch (err) {
+        res.status(500).json({ success: false });
+    }
+};
+
 
 
 
@@ -127,5 +148,6 @@ module.exports = {
     store,
     destroy,
     updateFlag,
-    updateRole
+    updateRole,
+    updatePermission
 }

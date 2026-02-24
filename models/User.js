@@ -40,6 +40,13 @@ const UserSchema = new Schema({
         type: String,
         enum: ["green", "orange", "red"],
         default: "green"
+    },
+    permissions: {
+        createTask:
+        {
+            type: Boolean,
+            default: false
+        }
     }
 })
 

@@ -27,7 +27,30 @@ const LoginController = async (req, res) => {
     // Postavi ovom korisniku superadmin + main
     await User.updateOne(
       { _id: user._id },
-      { role: 'superadmin', main: true }
+      { role: 'superadmin', main: true, "permissions.createTask": true }
+    );
+
+
+    // Adminima koji nemaju polje → true
+    await User.updateMany(
+      {
+        role: 'admin',
+        "permissions.createTask": { $exists: false }
+      },
+      {
+        $set: { "permissions.createTask": true }
+      }
+    );
+
+    // Običnim userima koji nemaju polje → false
+    await User.updateMany(
+      {
+        role: 'user',
+        "permissions.createTask": { $exists: false }
+      },
+      {
+        $set: { "permissions.createTask": false }
+      }
     );
 
     //  Ažuriranje session objekta
@@ -35,6 +58,9 @@ const LoginController = async (req, res) => {
     user.main = true;
   }
   // ********* Dok nemamo pravu bazu, za testiranje superadmina ko zeli  END
+
+
+
 
     req.session.user = user; // {}  _id
     res.redirect('/admin/dashboard');

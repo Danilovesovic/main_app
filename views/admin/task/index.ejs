@@ -2,7 +2,7 @@
 <%- include('/admin/partials/top.ejs')%>
             <div class="d-flex align-items-center mb-3">
                 <h1>All Tasks</h1>
-                <% if (user.role==='superadmin' || user.role==='admin' ) { %>
+                <% if (user.permissions.createTask) { %>
                 <a href="/admin/task/create" class="btn btn-outline-primary ms-auto">New Task</a>
                 <% } %>
             </div>
