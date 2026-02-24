@@ -39,7 +39,7 @@
                                 </td>
                                 <td><%= task.status %></td>
                                 <td>
-                                    <% if (user && (task.isOwner(user._id) || (user.main==true)) ){%>
+                                    <% if (user && (task.isOwner(user._id) || (user.role=="superadmin" )) ){%>
                                     <i data-id="<%= task._id %>" class="delete-btns bi-trash"></i>
                                         <% } %>
                                     <i class="bi-pen"></i>

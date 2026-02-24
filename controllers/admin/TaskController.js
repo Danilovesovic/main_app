@@ -46,7 +46,7 @@ const destroy =async (req,res) => {
         let id = req.params.id;
         let task = await Task.findById(id);
         let user = req.session.user;
-        if (!task.isOwner(req.session.user._id) && !user.main) {
+        if (!task.isOwner(req.session.user._id) && (user.role !== 'superadmin')) {
             return res.status(401).json({msg: 'Upsss neces moci'});
         }
         let deleted = await Task.findByIdAndDelete(id); // stop

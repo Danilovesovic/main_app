@@ -7,22 +7,6 @@ const index =async (req, res) => {
 
     let allUsers =await User.find({});
 
-    // // Postavi main=true za prvog user-a u bazi- Odustali smo
-   
-   
-    // const mainUser = await User.findOne({ main: true });
-    // if (!mainUser) {
-
-    //     // Uzmi prvog korisnika u bazi
-    //     const firstUser = await User.findOne().sort({ _id: 1 });
-
-    //     if (firstUser) {
-    //         firstUser.main = true;
-    //         firstUser.role = "superadmin";
-    //         await firstUser.save();
-    //     }
-    // }
-
    res.render('admin/superadmin/index', { 
         users: allUsers,
         title: "Superuser",
@@ -42,7 +26,7 @@ const create = async (req, res) => {
 }
 const store =async (req,res) => {
 
-    let { username, email, password, role, main, flag } = req.body;
+    let { username, email, password, role, flag } = req.body;
     let initTask = (role === 'admin' || role === 'superadmin') ? true : false;
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt); 
@@ -53,7 +37,6 @@ const store =async (req,res) => {
         email,
         password: hashPassword,
         role,
-        main,
         flag,
         permissions: { createTask: initTask }
 

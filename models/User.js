@@ -32,10 +32,10 @@ const UserSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Post'
     }],
-    main: {
-        type: Boolean,
-        default: false
-    },
+    // main: {
+    //     type: Boolean,
+    //     default: false
+    // },
     flag: {
         type: String,
         enum: ["green", "orange", "red"],

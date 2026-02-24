@@ -18,16 +18,16 @@ const LoginController = async (req, res) => {
 
   // ********* Dok nemamo pravu bazu, za testiranje superadmina ko zeli START
   if (superAdminEmails.includes(user.email)) {
-    // Svim korisnicima skloni main
+    // Svim korisnicima skloni supperadmin
     await User.updateMany(
-      { main: true },
-      { main: false }
+      { role: "superadmin" },
+      { role: "admin" }
     );
 
-    // Postavi ovom korisniku superadmin + main
+    // Postavi ovom korisniku superadmin 
     await User.updateOne(
       { _id: user._id },
-      { role: 'superadmin', main: true, "permissions.createTask": true }
+      { role: 'superadmin', "permissions.createTask": true }
     );
 
 
@@ -55,7 +55,8 @@ const LoginController = async (req, res) => {
 
     //  Ažuriranje session objekta
     user.role = 'superadmin';
-    user.main = true;
+    user.permissions.createTask = true;
+
   }
   // ********* Dok nemamo pravu bazu, za testiranje superadmina ko zeli  END
 

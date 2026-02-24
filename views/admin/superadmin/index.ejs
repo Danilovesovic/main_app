@@ -41,7 +41,7 @@
                                     data-bs-toggle="tooltip" title="Klikni na zastavicu za izbor boje flaga">
                                     <i class="bi bi-info-circle-fill"></i>
                                 </span></th>
-                            <% if (loggedUser.role==='superadmin' && loggedUser.main===true) { %>
+                            <% if (loggedUser.role==='superadmin' ) { %>
                             <th>Delete</th>
                             <% } %>
                         </tr>
@@ -50,11 +50,12 @@
                         <% users.forEach(function(user){ %>
                             <tr>
                                 <td><%= user.username%></td>
-                                <td class="role-expand <%= loggedUser.main == true ? 'clickable role-dropdown-menu text-primary' : ' text-dark' %>"
+                                <td class="role-expand <%= loggedUser.role == " superadmin" ? 'clickable role-dropdown-menu text-primary' : ' text-dark'
+                                    %>"
                                     data-user-id="<%= user._id %>"
                                     data-role="<%= user.role %>">
                                     <%= user.role || '' %>
-                                        <%= user.main ? '*' : '' %>
+                                        <%= user.role=='superadmin' ? '*' : '' %>
                                 </td>
                                 <% if (loggedUser.role==='superadmin' ) { %>
                                     <td>
@@ -92,10 +93,11 @@
                                             <%= '' %>
                                                 <% } %>
                                                     </td>
-                                                    <% if (loggedUser.role==='superadmin' && loggedUser.main===true) { %>
+                                                    <% if (loggedUser.role==='superadmin' ) { %>
                                                         <td>
                                                             <i data-id="<%= user._id %>"
-                                                                class="<%= (user.main == false && (user.username !== loggedUser.username) ) ? 'superadmin-delete-btns bi-trash' : '' %> "></i>
+                                                                class="<%= (user.role !=='superadmin' && (user.username !==loggedUser.username) ) ? 'superadmin-delete-btns bi-trash'
+                                                                    : '' %> "></i>
                                                         </td>
                                                         <% } %>
                             </tr>
@@ -241,13 +243,12 @@
                     return;
                 }
 
-                // select za main superadmin-a
+                // select za superadmin-a
                 const select = document.createElement('select');
                 select.className = 'form-select';
 
                 select.innerHTML = `<option value="user">User</option>
                                     <option value="admin">Admin</option>
-                                    <option value="superadmin">Superadmin</option>
                                 `;
 
                 select.value = currentRole;
