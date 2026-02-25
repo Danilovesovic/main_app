@@ -50,7 +50,7 @@
                         <% users.forEach(function(user){ %>
                             <tr>
                                 <td><%= user.username%></td>
-                                <td class="role-expand <%= loggedUser.role == " superadmin" ? 'clickable role-dropdown-menu text-primary' : ' text-dark'
+                                <td class="role-expand <%= loggedUser.role == 'superadmin' ? 'clickable role-dropdown-menu text-primary' : ' text-dark'
                                     %>"
                                     data-user-id="<%= user._id %>"
                                     data-role="<%= user.role %>">
