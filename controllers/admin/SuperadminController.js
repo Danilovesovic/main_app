@@ -7,26 +7,11 @@ const index =async (req, res) => {
 
     let allUsers =await User.find({});
 
-    // // Postavi main=true za prvog user-a u bazi- Odustali smo
-   
-   
-    // const mainUser = await User.findOne({ main: true });
-    // if (!mainUser) {
-
-    //     // Uzmi prvog korisnika u bazi
-    //     const firstUser = await User.findOne().sort({ _id: 1 });
-
-    //     if (firstUser) {
-    //         firstUser.main = true;
-    //         firstUser.role = "superadmin";
-    //         await firstUser.save();
-    //     }
-    // }
-
    res.render('admin/superadmin/index', { 
         users: allUsers,
         title: "Superuser",
        loggedUser: req.session.user  
+
     });
 }
 const create = async (req, res) => {
@@ -41,20 +26,19 @@ const create = async (req, res) => {
 }
 const store =async (req,res) => {
 
-    let { username, email, password, role, main, flag } = req.body;
+    let { username, email, password, role, flag } = req.body;
+    let initTask = (role === 'admin' || role === 'superadmin') ? true : false;
     const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(password, salt);
-    //AKo je baza prazna, prvi User ce biti main Superadmin koga nece moci niko da obrise
-    let allUsers = await User.find({});
-    let emptyBase = (allUsers.length === 0) ? true : false;
+    const hashPassword = await bcrypt.hash(password, salt); 
+
 
     const user =await User.create({
         username,
         email,
         password: hashPassword,
         role,
-        main,
-        flag 
+        flag,
+        permissions: { createTask: initTask }
 
     });
 
@@ -118,6 +102,25 @@ const updateRole = async (req, res) => {
     }
 };
 
+const updatePermission = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const createTask = req.body.createTask;
+
+        const updatedUser = await User.findByIdAndUpdate(userId, {
+            $set: {
+                "permissions.createTask": createTask
+            }
+        },
+            { new: true });
+
+        res.json({ success: true, user: updatedUser });
+
+    } catch (err) {
+        res.status(500).json({ success: false });
+    }
+};
+
 
 
 
@@ -128,5 +131,6 @@ module.exports = {
     store,
     destroy,
     updateFlag,
-    updateRole
+    updateRole,
+    updatePermission
 }

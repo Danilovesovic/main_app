@@ -37,13 +37,13 @@
                             <label for="password">password</label>
                             <input name="password" id="password" class="form-control" placeholder="Enter password"></input>
                         </div>
-                        <% if (user.role==='superadmin' && user.main===true) { %>
+                        <% if (user.role==='superadmin' ) { %>
                         <div class="mb-3">
                             <label for="role">Role</label>
                             <select name="role" id="role" class="form-select">
                                 <option disabled hidden selected>Select user role</option>
-                                 <option value="admin">Admin</option>
-                                 <option value="superadmin">Superadmin</option>
+                                <option value="user">User</option>
+                                <option value="admin">Admin</option>
                             </select>
                         </div>
                         <% } %>

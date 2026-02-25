@@ -14,7 +14,7 @@ const RegisterController = async (req, res) => {
         }
         const salt = await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(password, salt);
-        const newUser = new User({username, email, password: hashPassword, profileImage: '/assets/profiles/default.png', role: "admin", main: false });
+        const newUser = new User({ username, email, password: hashPassword, profileImage: '/assets/profiles/default.png', role: "user", main: false });
         await newUser.save();
         // ???
         res.redirect('/');

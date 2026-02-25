@@ -45,7 +45,7 @@ router.delete('/superadmin/:id', SuperadminController.destroy)
 
 router.patch('/superadmin/:userId/flag', SuperadminController.updateFlag)
 router.patch('/superadmin/:userId/role', SuperadminController.updateRole);
-
+router.patch('/superadmin/update-permission/:userId', SuperadminController.updatePermission);
 
 
 

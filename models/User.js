@@ -25,21 +25,28 @@ const UserSchema = new Schema({
     },
     role : {
         type: String,
-        enum: ["admin", "superadmin"],
-        default: "admin"
+        enum: ["admin", "superadmin", "user"],
+        default: "user"
     },
     favoritePosts: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Post'
     }],
-    main: {
-        type: Boolean,
-        default: false
-    },
+    // main: {
+    //     type: Boolean,
+    //     default: false
+    // },
     flag: {
         type: String,
         enum: ["green", "orange", "red"],
         default: "green"
+    },
+    permissions: {
+        createTask:
+        {
+            type: Boolean,
+            default: false
+        }
     }
 })
 

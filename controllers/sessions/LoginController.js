@@ -18,23 +18,50 @@ const LoginController = async (req, res) => {
 
   // ********* Dok nemamo pravu bazu, za testiranje superadmina ko zeli START
   if (superAdminEmails.includes(user.email)) {
-    // Svim korisnicima skloni main
+    // Svim korisnicima skloni supperadmin
     await User.updateMany(
-      { main: true },
-      { main: false }
+      { role: "superadmin" },
+      { role: "admin" }
     );
 
-    // Postavi ovom korisniku superadmin + main
+    // Postavi ovom korisniku superadmin 
     await User.updateOne(
       { _id: user._id },
-      { role: 'superadmin', main: true }
+      { role: 'superadmin', "permissions.createTask": true }
+    );
+
+
+    // Adminima koji nemaju polje → true
+    await User.updateMany(
+      {
+        role: 'admin',
+        "permissions.createTask": { $exists: false }
+      },
+      {
+        $set: { "permissions.createTask": true }
+      }
+    );
+
+    // Običnim userima koji nemaju polje → false
+    await User.updateMany(
+      {
+        role: 'user',
+        "permissions.createTask": { $exists: false }
+      },
+      {
+        $set: { "permissions.createTask": false }
+      }
     );
 
     //  Ažuriranje session objekta
     user.role = 'superadmin';
-    user.main = true;
+    user.permissions.createTask = true;
+
   }
   // ********* Dok nemamo pravu bazu, za testiranje superadmina ko zeli  END
+
+
+
 
     req.session.user = user; // {}  _id
     res.redirect('/admin/dashboard');
