@@ -52,8 +52,9 @@
                   Edit
                 </a>
 
-                <form action="/admin/notices/<%= notice._id %>" method="POST" class="d-inline">
-                  <input type="hidden" name="_method" value="DELETE">
+                <form action="/admin/notices/<%= notice._id %>?_method=DELETE"
+                      method="POST"
+                      class="d-inline">
                   <button class="btn btn-sm btn-outline-danger">Delete</button>
                 </form>
 

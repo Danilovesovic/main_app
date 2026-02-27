@@ -21,16 +21,41 @@ const store = async (req, res) => {
 };
 
 const destroy = async (req, res) => {
-  res.send("Notice destroy");
+  try {
+    const { id } = req.params;
+
+    let deleteNotice = await Notice.findByIdAndDelete(id);
+
+    console.log("Notice obrisan", deleteNotice);
+    res.redirect("/admin/dashboard");
+  } catch (err) {
+    console.log(err);
+    res.redirect("/admin/dashboard");
+  }
 };
 
 const edit = async (req, res) => {
-  res.send("Notice edit");
+  const notice = await Notice.findById(req.params.id);
+  res.render("admin/notice/editNotice", {
+    notice,
+    title: "Edit Notice",
+    user: req.session.user,
+  });
+};
+
+const update = async (req, res) => {
+  let { title, description } = req.body;
+  let notice = await Notice.findByIdAndUpdate(req.params.id, {
+    title,
+    description,
+  });
+  res.redirect("/admin/dashboard");
 };
 
 module.exports = {
   store,
   create,
   edit,
+  update,
   destroy,
 };

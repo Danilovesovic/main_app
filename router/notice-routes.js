@@ -7,7 +7,8 @@ const router = Router();
 router.get("/create", NoticeController.create); //uradjeno
 router.post("/", NoticeController.store); //uradjeno
 
+router.get("/:id/edit", NoticeController.edit);
+router.put("/:id", NoticeController.update);
 router.delete("/:id", NoticeController.destroy);
-router.put("/notice/:id", NoticeController.edit);
 
 module.exports = router;

@@ -1,0 +1,30 @@
+<!-- generete to me  this page edit -->
+<%- include('/admin/partials/head.ejs') %> <%-
+include('/admin/partials/top.ejs') %>
+
+<div class="d-flex justify-content-between mb-4">
+  <h1 style="display: none">Edit Notice</h1>
+</div>
+
+<form action="/admin/notices/<%= notice._id %>?_method=PUT" method="POST">
+  <div class="mb-3">
+    <label for="title" class="form-label">Title</label>
+    <input
+      type="text"
+      class="form-control"
+      id="title"
+      name="title"
+      value="<%= notice.title %>"
+    />
+  </div>
+  <div class="mb-3">
+    <label for="description" class="form-label">Description</label>
+
+    <textarea class="form-control" id="description" name="description" rows="3">
+<%= notice.description %></textarea
+    >
+  </div>
+  <button type="submit" class="btn btn-primary">Update Notice</button>
+</form>
+
+<%- include('/admin/partials/bottom.ejs') %>
