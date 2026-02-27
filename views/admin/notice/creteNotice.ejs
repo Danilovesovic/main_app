@@ -1,0 +1,47 @@
+<%- include('/admin/partials/head.ejs') %> <%-
+include('/admin/partials/top.ejs') %>
+
+<div class="d-flex align-items-center mb-3">
+  <h1>New Notice</h1>
+  <a href="/admin/dashboard" class="btn btn-outline-primary ms-auto">Cancel</a>
+</div>
+
+<hr />
+
+<div class="row">
+  <div class="col-8 offset-2">
+    <form action="/admin/notices" method="post">
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input
+          type="text"
+          name="title"
+          class="form-control"
+          id="title"
+          placeholder="Enter title"
+          maxlength="120"
+          required
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea
+          name="description"
+          id="description"
+          class="form-control"
+          rows="6"
+          maxlength="1000"
+          required
+        ></textarea>
+      </div>
+
+      <div class="d-flex gap-2">
+        <button class="btn btn-primary">Save</button>
+        <a href="/admin/dashboard" class="btn btn-outline-secondary">Back</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('/admin/partials/bottom.ejs') %>

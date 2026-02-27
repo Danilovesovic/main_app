@@ -23,10 +23,10 @@
             <% } %>
           <a href='/admin/profile' class="btn btn-outline-primary">
                       <img src="<%= user?.profileImage || '/assets/profiles/default.png' %>"
-                      alt="<%= user.username %>"
+                      alt="<%= user?.username || 'User' %>"
                       class="rounded-circle me-2"
                       style="width: 40px; height: 40px; object-fit: cover;">
-                      <%= user.username %>
+                      <%= user?.username || 'User' %>
           </a>
      </div>
   </div>

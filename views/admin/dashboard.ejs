@@ -1,4 +1,85 @@
-<%- include('/admin/partials/head.ejs')%>
-<%- include('/admin/partials/top.ejs')%>
-            <h1 style="display: none">Welcome <%= user.username %></h1>
-<%- include('/admin/partials/bottom.ejs')%>
+<%- include('/admin/partials/head.ejs') %>
+<%- include('/admin/partials/top.ejs') %>
+
+<div class="d-flex justify-content-between mb-4">
+  <h1 style="display:none">Welcome <%= user.username %></h1>
+
+  <% if (user.role === "admin" || user.role === "superadmin") { %>
+    <a href="/admin/notices/create" class="btn btn-success">
+      + Dodaj Notice
+    </a>
+  <% } %>
+</div>
+
+<% if (notices && notices.length > 0) { %>
+
+  <% notices.forEach(notice => { %>
+
+    <div class="card mb-3">
+      <div class="card-body">
+
+        <!-- Gornji deo -->
+        <div class="d-flex justify-content-between">
+
+          <div>
+            <h5><%= notice.title %></h5>
+
+            <% if (notice.createdBy) { %>
+              <small class="text-muted">
+                By <%= notice.createdBy.username || notice.createdBy.name %>
+              </small>
+            <% } %>
+          </div>
+
+          <div class="text-end">
+            <small class="text-muted">
+            <%= new Date(notice.createdAt).toLocaleString('sr-RS') %>
+            </small>
+
+            <%
+              const isSuperAdmin = user.role === "superadmin";
+              const isAdmin = user.role === "admin";
+              const isOwner =
+                notice.createdBy &&
+                String(notice.createdBy._id) === String(user._id);
+            %>
+
+            <% if (isSuperAdmin || (isAdmin && isOwner)) { %>
+              <div class="mt-2">
+
+                <a href="/admin/notices/<%= notice._id %>/edit"
+                   class="btn btn-sm btn-outline-primary">
+                  Edit
+                </a>
+
+                <form action="/admin/notices/<%= notice._id %>" method="POST" class="d-inline">
+                  <input type="hidden" name="_method" value="DELETE">
+                  <button class="btn btn-sm btn-outline-danger">Delete</button>
+                </form>
+
+              </div>
+            <% } %>
+
+          </div>
+
+        </div>
+
+        <!-- Tekst -->
+        <p class="mt-3 mb-0 ">
+          <%= notice.description %>
+        </p>
+
+      </div>
+    </div>
+
+  <% }) %>
+
+<% } else { %>
+
+  <div class="alert alert-light text-center">
+    Nema notice-a još.
+  </div>
+
+<% } %>
+
+<%- include('/admin/partials/bottom.ejs') %>
