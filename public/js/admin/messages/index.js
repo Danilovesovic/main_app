@@ -128,7 +128,7 @@
 			btn.textContent = reciver.username;
 
 			if (convo._id === activeConversation?._id) {
-				btn.classList.add('active');
+				btn.classList.add('conversation-active');
 			}
 
 			if (convo.hasUnread) {
@@ -169,8 +169,8 @@
 
 			wrapper.className = `d-flex mb-2 ${isMineMessage ? 'justify-content-end' : 'justify-content-start'}`;
 			wrapper.innerHTML = `
-						<div class="rounded ${isMineMessage ? 'bg-primary text-white' : 'bg-white border'}" style="max-width: 70%;">
-							<div class="small fw-bold border-bottom px-2 pb-1 pt-1 ${isMineMessage ? 'text-end text-white border-info' : 'text-start text-muted border-secondary'}" style="font-size: 0.75rem;">
+						<div class="rounded ${isMineMessage ? 'bg-brand text-darkcyan' : 'bg-darkcyan border'}" style="max-width: 70%;">
+							<div class="small fw-bold border-bottom px-2 pb-1 pt-1 ${isMineMessage ? 'text-end text-darkcyan border-info' : 'text-start text-muted border-secondary'}" style="font-size: 0.75rem;">
 								${isMineMessage ? 'You' : msg.sender.username}
 							</div>
 							<div class="p-2 message-text">${msg.text}</div>

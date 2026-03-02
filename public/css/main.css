@@ -1,7 +1,7 @@
 html, body {
     height: 100%;
+    background: #f6f7fb;;
 }
-
 
 body {
     background: linear-gradient(darkcyan,pink);
@@ -12,11 +12,24 @@ body {
 body.register {
     background: linear-gradient(pink,darkcyan);
 }
+
+body.login-register {
+background: 
+linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.25)),
+url("/images/login-register.jpg");
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+
+}
+
 .login-form form {
     width: 500px;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    padding: 30px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    border: 1px solid rgba(255,255,255,0.6);
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -33,3 +46,137 @@ body.register {
     padding: 10px 20px;
     align-self: center;
 }
+
+.admin-page {
+padding: 24px;
+max-width: 980px;
+margin: 0 auto;
+
+}
+
+.admin-page .notice-card {
+border-radius: 16px;
+border: 1px solid #e4e6eb;
+box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+
+}
+
+.admin-page .btn-pill {
+border-radius: 999px !important;
+
+}
+
+.admin-page .empty-state {
+border: 1px dashed #ccc;
+border-radius: 16px;
+padding: 18px;
+background: #fff;
+}
+
+body.admin {
+display: block;
+justify-content: unset;
+align-items: unset;
+background: #f6f7fb;
+
+}
+
+body.admin .list-group-item:hover{
+background-color: rgba(0,139,139,0.10);
+}
+
+body.admin .card,
+body.admin .notice-card {
+border-radius: 16px;
+box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+border: 1px solid rgba(0,0,0,0.06);
+}
+
+.btn-brand{
+background-color: darkcyan;
+border-color: darkcyan;
+color:#fff;
+}
+
+.btn-brand:hover{
+ background-color: #087a76;
+ border-color: #087a76;
+ color:#fff;
+}
+.sidebar-brand-active.active{
+background-color: darkcyan;
+border-color: darkcyan;
+color:#087a76;;
+}
+
+body.admin .nav-tabs .nav-link,
+body.admin .nav-tabs .nav-link:visited{
+  color: darkcyan;
+}
+
+body.admin .nav-tabs .nav-link:hover{
+  color: #087a76;
+}
+
+body.admin .nav-tabs .nav-link.active,
+body.admin .nav-tabs .nav-item.show .nav-link{
+  color: darkcyan;
+  border-color: darkcyan darkcyan #fff;
+  font-weight: 600;
+}
+
+body.admin .nav-tabs .nav-link:focus,
+body.admin .nav-tabs .nav-link:active{
+  box-shadow: none;
+  outline: none;
+  color: darkcyan;
+}
+
+body.admin .btn.btn-outline-brand{
+  border: 1px solid darkcyan;
+  color: darkcyan;
+  background: transparent;
+}
+
+body.admin .btn.btn-outline-brand:hover{
+  background: rgba(0,139,139,0.10);
+  border-color: darkcyan;
+  color: darkcyan;
+}
+
+body.admin .admin.navbar {
+background: #ffffff;
+border-bottom: 1px solid rgba (0,0,0,0.06);
+}
+
+body.admin .navbar-brand {
+color: darkcyan;
+
+}
+
+body.admin .navbar-brand:hover {
+color:#087a76;
+}
+
+.bg-brand{
+color: darkcyan;
+}
+
+#conversationList .conversation-active{
+  background-color: darkcyan;
+  color: #fff;
+  border-color: darkcyan;
+}
+
+#conversationList .conversation-active:hover{
+  background-color: #087a76;
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+.row > .col-2,
+.row > .col-10{
+flex: 0 0 100%;
+max-width: 100%;
+
+}}

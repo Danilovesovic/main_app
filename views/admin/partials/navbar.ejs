@@ -1,4 +1,4 @@
-<nav class="navbar bg-body-tertiary">
+<nav class="navbar admin-navbar">
   <div class="container-fluid">
     <a class="navbar-brand" href="/">
     <div class="d-flex gap-3">
@@ -17,11 +17,11 @@
     </div>
       <div class="ms-auto d-flex gap-2">
           <% if (user && (user.role=='superadmin' || user.role=='admin' )) { %>
-            <a href="/admin/superadmin" class="btn btn-outline-info d-flex justify-content-center align-items-center ">
+            <a href="/admin/superadmin" class="btn btn-outline-brand d-flex justify-content-center align-items-center ">
               <%= user.role%>
             </a>
             <% } %>
-          <a href='/admin/profile' class="btn btn-outline-primary">
+          <a href='/admin/profile' class="btn btn-outline-brand">
                       <img src="<%= user?.profileImage || '/assets/profiles/default.png' %>"
                       alt="<%= user?.username || 'User' %>"
                       class="rounded-circle me-2"

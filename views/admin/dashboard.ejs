@@ -1,11 +1,13 @@
 <%- include('/admin/partials/head.ejs') %>
 <%- include('/admin/partials/top.ejs') %>
 
-<div class="d-flex justify-content-between mb-4">
-  <h1 style="display:none">Welcome <%= user.username %></h1>
+<div class="admin-page">
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="page-title m-0">Welcome <%= user.username %></h1>
 
   <% if (user.role === "admin" || user.role === "superadmin") { %>
-    <a href="/admin/notices/create" class="btn btn-success">
+    <a href="/admin/notices/create" class="btn btn-brand btn-pill">
       + Dodaj Notice
     </a>
   <% } %>
@@ -15,7 +17,7 @@
 
   <% notices.forEach(notice => { %>
 
-    <div class="card mb-3">
+    <div class="card notice-card mb-3">
       <div class="card-body">
 
         <!-- Gornji deo -->
@@ -77,10 +79,13 @@
 
 <% } else { %>
 
-  <div class="alert alert-light text-center">
+  <div class="empty-state text-center">
+
     Nema notice-a još.
   </div>
 
 <% } %>
+
+</div>
 
 <%- include('/admin/partials/bottom.ejs') %>

@@ -5,15 +5,15 @@
     <link rel="stylesheet" href="/bootstrap.min.css">
     <link rel="stylesheet" href="/css/admin/main.css">
 </head>
-<body>
+<body class="admin">
     <%- include('/admin/profile/profileEditNavbar.ejs') %>
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card mb-5">
-                    <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
+                    <div class="card-header bg-brand text-white d-flex align-items-center justify-content-between">
                         <div><h5 class="mb-0">Edit Profile</h5></div><div class=" ms-auto"><div class="d-flex gap-2">
-                                <a href="/admin/profile/delete" class="btn btn-danger btn-md fs-6 fw-bold">Delete Profile</a>
+                                <a href="/admin/profile/delete" class="btn btn-brand btn-md fs-6 fw-bold">Delete Profile</a>
                             </div></div>
                     </div>
                     <div class="card-body">
@@ -101,8 +101,8 @@
                             </div>
 
                             <div class="d-flex gap-2">
-                                <button type="submit" class="btn btn-success">Sačuvaj izmene</button>
-                                <a href="/admin/profile" class="btn btn-secondary">Otkaži</a>
+                                <button type="submit" class="btn btn-brand">Sačuvaj izmene</button>
+                                <a href="/admin/profile" class="btn btn-brand">Otkaži</a>
                             </div>
                             
                         </form>

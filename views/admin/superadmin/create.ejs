@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="/css/admin/main.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
-<body>
+<body class="admin">
 <%- include('../partials/navbar.ejs', {user})%>
 <div class="container-fluid mt-5">
     <div class="row">
@@ -19,7 +19,7 @@
         <div class="col-10">
             <div class="d-flex align-items-center mb-3">
                 <h1>New User</h1>
-                <a href="/admin/superadmin" class="btn btn-outline-primary ms-auto">Cancel</a>
+                <a href="/admin/superadmin" class="btn btn-outline-brand ms-auto">Cancel</a>
             </div>
             <hr>
             <div class="row">
@@ -68,7 +68,7 @@
 
                         
                         <div class="mb-3">
-                            <button class="btn btn-primary w-50">Save</button>
+                            <button class="btn btn-brand w-50">Save</button>
                         </div>
                         </div>
                     </form>

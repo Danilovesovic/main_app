@@ -5,13 +5,13 @@
             </div>
             <ul class="nav nav-tabs mb-3">
                 <li class="nav-item">
-                    <a class="nav-link <%= tab === 'all' ? 'active' : '' %>" href="/admin/social?tab=all">All Posts</a>
+                    <a class="nav-link tab-brand<%= tab === 'all' ? 'active' : '' %>" href="/admin/social?tab=all">All Posts</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <%= tab === 'my-posts' ? 'active' : '' %>" href="/admin/social?tab=my-posts">My Posts</a>
+                    <a class="nav-link tab-brand<%= tab === 'my-posts' ? 'active' : '' %>" href="/admin/social?tab=my-posts">My Posts</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <%= tab === 'favorites' ? 'active' : '' %>" href="/admin/social?tab=favorites">Favorites</a>
+                    <a class="nav-link tab-brand<%= tab === 'favorites' ? 'active' : '' %>" href="/admin/social?tab=favorites">Favorites</a>
                 </li>
             </ul>
             <% if (tab === 'all' || tab === 'my-posts') { %>
@@ -32,14 +32,13 @@
                                     <span class="small text-muted" id="images-chosen"></span>
                                 </div>
                                 <div id="images-preview" class="images-preview d-flex flex-wrap gap-2 mb-3"></div>
-                                <button type="submit" class="btn btn-primary">Post</button>
+                                <button type="submit" class="btn btn-brand">Post</button>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
             <% } %>
-            <hr>
             <div class="row social-feed">
                 <div class="col-10 offset-1">
                     <% if (posts.length === 0) { %>
@@ -108,16 +107,16 @@
                                                     </button>
                                                     <% }); %>
                                                 </div>
-                                                <button type="button" class="btn btn-link btn-sm p-0 reply-toggle-btn">Reply</button>
+                                                <button type="button" class="btn btn-sm btn-brand p-0 reply-toggle-btn">Reply</button>
                                                 <% if (canDeleteC) { %>
-                                                <button type="button" class="btn btn-link btn-sm p-0 text-danger delete-comment-btn" data-comment-id="<%= c._id %>"><i class="bi bi-trash"></i></button>
+                                                <button type="button" class="btn btn-sm btn-brand p-0 text-danger delete-comment-btn" data-comment-id="<%= c._id %>"><i class="bi bi-trash"></i></button>
                                                 <% } %>
                                             </div>
                                         </div>
                                         <div class="reply-form-wrap d-none mt-1 ms-3">
                                             <form class="reply-form d-flex gap-2">
                                                 <input type="text" class="form-control form-control-sm reply-input" placeholder="Reply..." name="text">
-                                                <button type="submit" class="btn btn-sm btn-primary">Send</button>
+                                                <button type="submit" class="btn btn-sm btn-brand">Send</button>
                                             </form>
                                         </div>
                                         <div class="replies ms-3 mt-1">
@@ -151,7 +150,7 @@
                                 </div>
                                 <form class="comment-form d-flex gap-2 mt-2">
                                     <input type="text" class="form-control form-control-sm comment-input" placeholder="Write a comment..." name="text">
-                                    <button type="submit" class="btn btn-sm btn-primary">Send</button>
+                                    <button type="submit" class="btn btn-sm btn-brand">Send</button>
                                 </form>
                                 </div>
                             </div>
